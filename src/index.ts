@@ -16,15 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(requestMiddleware);
 
-app.get("/users", (req, res) => {
-  res.send(db.getUsers());
-});
-
-app.post("/users/register", (req, res) => {
-  db.signup(req.body);
-  res.send("OK");
-});
-// app.use("/users", userRouter);
+app.use("/users", userRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello world");

@@ -1,11 +1,11 @@
-import { Post } from "../interface";
+import { Post } from "../types";
 
 export interface PostDao {
-  getPosts(): Post[],
-  getPost(id: string): Post | undefined,
-  createPost(post: Post): void,
-  updatePost(post: Post): void, 
-  deletePost(id: string): void,
+  getPosts(): Post[];
+  getPost(id: string): Post | undefined;
+  createPost(post: Post): void;
+  updatePost(post: Post): void;
+  deletePost(id: string): void;
 }
 
 // GET /api/blog/posts

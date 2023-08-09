@@ -1,5 +1,5 @@
 import DataStore from "..";
-import { Comment, Course, Like, Post, User } from "../../interface";
+import { Comment, Course, Like, Post, User } from "../../types";
 
 export class InMemoryDataStore implements DataStore {
   private users: User[] = [];

@@ -1,4 +1,4 @@
-import { User } from "../interface";
+import { User } from "../types";
 
 export interface UserDao {
   signup(user: User): void; // createUser

@@ -1,3 +1,5 @@
+import { RequestHandler } from "express";
+
 export interface User {
   id: string;
   firstName: string;
@@ -5,7 +7,7 @@ export interface User {
   email: string;
   password: string;
   createdAt: number;
-  editedAt: number;
+  updatedAt: number;
 }
 
 export interface Course {
@@ -59,3 +61,10 @@ export interface Like {
   userId: string;
   createdAt: number;
 }
+
+export type ExpressHandler<Req, Res> = RequestHandler<
+  string,
+  Partial<Res>,
+  Partial<Req>,
+  any
+>;
