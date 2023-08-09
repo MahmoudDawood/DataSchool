@@ -126,63 +126,65 @@ The Online Courses Platform aims to provide users with a convenient and engaging
 
 ### Users
 
-| Attribute | Type   | References     |
-| --------- | ------ | -------------- |
-| id        | int    | primary key    |
-| name      | string |                |
+| Attribute | Type   | References     | edits                                    |
+| --------- | ------ | -------------- | ---------------------------------------- |
+| id        | string | primary key    |
+| fistName  | string |                |
+| lastName  | string |                |
 | email     | string | unique         |
 | password  | string |                |
-| role      | string | default='user' |
+| role      | string | default='user' | Make it an enum of either user of author |
 
 ### Courses
 
-| Attribute     | Type   | References                       |
-| ------------- | ------ | -------------------------------- |
-| id            | int    | primary key                      |
-| title         | string |                                  |
-| description   | text   |                                  |
-| price         | float  |                                  |
-| category      | string |                                  |
-| author_id     | int    | foreign key references users(id) |
-| lessons       | json   |                                  |
-| quizzes       | json   |                                  |
-| video_preview | string |                                  |
+| Attribute   | Type   | References                       |
+| ----------- | ------ | -------------------------------- |
+| id          | string | primary key                      |
+| title       | string |                                  |
+| description | string |                                  |
+| price       | int    |                                  |
+| category    | string |                                  |
+| authorId    | string | foreign key references users(id) |
+| lessons     | json   |                                  |
+| quizzes     | json   |                                  |
+| preview     | string |                                  |
 
 ### Lessons
 
 | Attribute | Type   | References                         |
-| --------- | ------ | ---------------------------------- |
+| --------- | ------ | ---------------------------------- | -------------------- |
 | id        | int    | primary key                        |
-| course_id | int    | foreign key references courses(id) |
+| courseId  | int    | foreign key references courses(id) |
 | title     | string |                                    |
 | content   | text   |                                    |
 | quiz      | json   |                                    |
+| url       | string |                                    | Add images and links |
 
 ### Posts
 
-| Attribute    | Type     | References                       |
-| ------------ | -------- | -------------------------------- |
-| id           | int      | primary key                      |
-| title        | string   |                                  |
-| content      | text     |                                  |
-| author_id    | int      | foreign key references users(id) |
-| published_at | datetime |                                  |
+| Attribute | Type     | References                       |
+| --------- | -------- | -------------------------------- |
+| id        | int      | primary key                      |
+| title     | string   |                                  |
+| content   | text     |                                  |
+| authorId  | int      | foreign key references users(id) |
+| createdAt | datetime |                                  |
 
 ### Comments
 
-| Attribute    | Type     | References                            |
-| ------------ | -------- | ------------------------------------- |
-| id           | int      | primary key                           |
-| blog_post_id | int      | foreign key references blog_posts(id) |
-| user_id      | int      | foreign key references users(id)      |
-| content      | text     |                                       |
-| created_at   | datetime |                                       |
+| Attribute | Type     | References                            |
+| --------- | -------- | ------------------------------------- |
+| id        | int      | primary key                           |
+| postId    | int      | foreign key references blog_posts(id) |
+| userId    | int      | foreign key references users(id)      |
+| content   | text     |                                       |
+| createdAt | datetime |                                       |
 
 ### Likes
 
-| Attribute  | Type      | References                | edits            |
-| ---------- | --------- | ------------------------- | ---------------- |
-| id         | int       | primary key               | Can be composite |
-| post_id    | int       | foreign key to posts (id) |
-| user_id    | int       | foreign key to users (id) |
-| created_at | timestamp |                           | Ignored?         |
+| Attribute | Type      | References                | edits            |
+| --------- | --------- | ------------------------- | ---------------- |
+| id        | int       | primary key               | Can be composite |
+| postId    | int       | foreign key to posts (id) |
+| userId    | int       | foreign key to users (id) |
+| createdAt | timestamp |                           | Ignore           |
