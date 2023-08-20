@@ -27,4 +27,16 @@ export namespace UserController {
 			next(error);
 		}
 	};
+
+	export const findAll = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const users = await UserService.findAll();
+
+			if (users) {
+				return res.json({ users });
+			}
+		} catch (error: any) {
+			next(new Error(error));
+		}
+	};
 }

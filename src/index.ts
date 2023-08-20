@@ -1,5 +1,8 @@
 import express, { ErrorRequestHandler, Express, NextFunction, Request, Response } from "express";
+import courseRouter from "./routers/course.router";
 import userRouter from "./routers/user.router";
+
+// import { courseRouter, userRouter } from "./routers/index";
 
 require("dotenv").config();
 const app: Express = express();
@@ -16,6 +19,7 @@ app.use(express.json());
 app.use(requestMiddleware);
 
 app.use("/users", userRouter);
+app.use("courses", courseRouter);
 
 app.get("/", (req, res) => {
 	res.send("Hello world");

@@ -46,4 +46,14 @@ export namespace UserService {
 			throw new Error(error);
 		}
 	};
+
+	export const findAll = async () => {
+		// TODO: Make another one for instructors only, students only
+		try {
+			const users = await prisma.user.findMany({});
+			return users;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
 }
