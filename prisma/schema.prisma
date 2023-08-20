@@ -11,34 +11,43 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  firstName String
-  lastName  String
-  phone     String   @unique
-  email     String   @unique
-  password  String
-  role      UserRole @default(CLIENT)
-  createdAt DateTime @default(now())
-
-  givenCourses Course[]
-  enrollments  Enrollment[]
-  reviews      Review[]
-  posts        Post[]
-  comments     Comment[]
-  likes        Like[]
+  id          String       @id @default(uuid())
+  firstName   String
+  lastName    String
+  gender      Gender
+  phone       String       @unique
+  email       String       @unique
+  password    String
+  createdAt   DateTime     @default(now())
+  enrollments Enrollment[]
+  reviews     Review[]
+  comments    Comment[]
+  likes       Like[]
+  Instructor  Instructor?
 }
 
-enum UserRole {
-  CLIENT
-  INSTRUCTOR
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model Instructor {
+  jobTitle    String
+  about       String
+  photo       String?
+  socialMedia Json
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  courses     Course[]
+  posts       Post[]
 }
 
 model Enrollment {
   userId     String
   courseId   String
   enrolledAt DateTime @default(now())
-  progress   Int
-  currLesson Int
+  progress   Int      @default(0)
+  currLesson Int      @default(1)
   user       User     @relation(fields: [userId], references: [id])
   course     Course   @relation(fields: [courseId], references: [id])
 
@@ -46,27 +55,25 @@ model Enrollment {
 }
 
 model Course {
-  id          String   @id @default(uuid())
-  title       String   @unique
-  authorId    String
-  description String
-  preview     String
-  duration    Int
-  price       Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  author User @relation(fields: [authorId], references: [id])
-
-  topics      Topic[]
-  enrollments Enrollment[]
-  reviews     Review[]
-  sections    Section[]
+  id           String       @id @default(uuid())
+  title        String       @unique
+  instructorId String
+  description  String
+  preview      String
+  duration     Int          @default(0)
+  price        Float
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  instructor   Instructor   @relation(fields: [instructorId], references: [userId])
+  topics       Topic[]
+  enrollments  Enrollment[]
+  reviews      Review[]
+  sections     Section[]
 }
 
 model Topic {
   id      String   @id @default(uuid())
-  name    String
+  name    String   @unique
   courses Course[]
   posts   Post[]
 }
@@ -74,7 +81,7 @@ model Topic {
 model Section {
   id       String   @id @default(uuid())
   title    String
-  duration Int
+  duration Int      @default(0)
   order    Int
   courseId String
   course   Course   @relation(fields: [courseId], references: [id])
@@ -107,16 +114,16 @@ model Review {
 }
 
 model Post {
-  id        String    @id @default(uuid())
+  id        String     @id @default(uuid())
   authorId  String
   title     String
-  image     String
+  image     String?
   content   String
-  createdAt DateTime  @default(now())
+  createdAt DateTime   @default(now())
+  author    Instructor @relation(fields: [authorId], references: [userId])
   topics    Topic[]
   likes     Like[]
   comments  Comment[]
-  author    User      @relation(fields: [authorId], references: [id])
 }
 
 model Comment {
