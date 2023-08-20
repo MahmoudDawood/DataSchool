@@ -23,22 +23,25 @@
   },
   "homepage": "https://github.com/MahmoudDawood/DataSchool#readme",
   "dependencies": {
+    "@prisma/client": "^5.1.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "pg": "^8.11.2",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.32.1",
-    "typescript": "^5.1.6"
+    "sequelize": "^6.32.1"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/express": "^4.17.17",
+    "@types/node": "^20.5.0",
     "concurrently": "^8.2.0",
     "eslint": "^8.46.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.1",
-    "ts-node": "^10.9.1"
+    "prisma": "^5.1.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   }
 }

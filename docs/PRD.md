@@ -134,31 +134,54 @@ The Online Courses Platform aims to provide users with a convenient and engaging
 | email     | string | unique         |
 | password  | string |                |
 | role      | string | default='user' | Make it an enum of either user of author |
+| createdAt | int    |                |
 
 ### Courses
 
-| Attribute   | Type   | References                       |
-| ----------- | ------ | -------------------------------- |
+| Attribute   | Type   | References                       | edits                           |
+| ----------- | ------ | -------------------------------- | ------------------------------- |
 | id          | string | primary key                      |
 | title       | string |                                  |
 | description | string |                                  |
+| duration    | int    |                                  |
 | price       | int    |                                  |
-| category    | string |                                  |
+| category    | string |                                  | Course has only on category?    |
 | authorId    | string | foreign key references users(id) |
 | lessons     | json   |                                  |
-| quizzes     | json   |                                  |
+| quizzes     | json   |                                  | Could attach to lesson directly |
 | preview     | string |                                  |
+| createdAt   | number |                                  |
+
+### Enrollment
+
+| Attribute  | Type   | References                         |
+| ---------- | ------ | ---------------------------------- |
+| id         | string | primary key                        |
+| userId     | string | foreign key references users(id)   |
+| courseId   | string | foreign key references courses(id) |
+| enrolledAt | int    |                                    |
 
 ### Lessons
 
-| Attribute | Type   | References                         |
+| Attribute | Type   | References                         | edits                |
 | --------- | ------ | ---------------------------------- | -------------------- |
-| id        | int    | primary key                        |
-| courseId  | int    | foreign key references courses(id) |
+| id        | string | primary key                        |
+| courseId  | string | foreign key references courses(id) |
 | title     | string |                                    |
 | content   | text   |                                    |
 | quiz      | json   |                                    |
 | url       | string |                                    | Add images and links |
+
+### Reviews
+
+| Attribute | Type     | References                         | edits     |
+| --------- | -------- | ---------------------------------- | --------- |
+| id        | string   | primary key                        | Composite |
+| courseId  | string   | foreign key references courses(id) |
+| userId    | string   | foreign key references users(id)   |
+| comment   | text     |                                    |
+| rating    | float    |                                    | enums     |
+| createdAt | datetime |                                    |
 
 ### Posts
 
@@ -172,13 +195,13 @@ The Online Courses Platform aims to provide users with a convenient and engaging
 
 ### Comments
 
-| Attribute | Type     | References                            |
-| --------- | -------- | ------------------------------------- |
-| id        | int      | primary key                           |
-| postId    | int      | foreign key references blog_posts(id) |
-| userId    | int      | foreign key references users(id)      |
+| Attribute | Type     | References                            | edits                  |
+| --------- | -------- | ------------------------------------- | ---------------------- |
+| id        | string   | primary key                           |
+| postId    | string   | foreign key references blog_posts(id) |
+| userId    | string   | foreign key references users(id)      |
 | content   | text     |                                       |
-| createdAt | datetime |                                       |
+| createdAt | datetime |                                       | Include media (images) |
 
 ### Likes
 

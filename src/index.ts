@@ -1,4 +1,4 @@
-import express, { Express, NextFunction, Request, Response } from "express";
+import express, { ErrorRequestHandler, Express, NextFunction, Request, Response } from "express";
 import userRouter from "./routers/user.router";
 
 require("dotenv").config();
@@ -20,6 +20,13 @@ app.use("/users", userRouter);
 app.get("/", (req, res) => {
 	res.send("Hello world");
 });
+
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+	console.error("Uncaught exception:", err);
+	res.status(500).send("Unexpected error occurred, please try again later.");
+};
+
+app.use(errorHandler);
 
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);

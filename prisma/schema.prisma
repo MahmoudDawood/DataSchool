@@ -1,0 +1,140 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  phone     String   @unique
+  email     String   @unique
+  password  String
+  role      UserRole @default(CLIENT)
+  createdAt DateTime @default(now())
+
+  givenCourses Course[]
+  enrollments  Enrollment[]
+  reviews      Review[]
+  posts        Post[]
+  comments     Comment[]
+  likes        Like[]
+}
+
+enum UserRole {
+  CLIENT
+  INSTRUCTOR
+}
+
+model Enrollment {
+  userId     String
+  courseId   String
+  enrolledAt DateTime @default(now())
+  progress   Int
+  currLesson Int
+  user       User     @relation(fields: [userId], references: [id])
+  course     Course   @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId])
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  title       String   @unique
+  authorId    String
+  description String
+  preview     String
+  duration    Int
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author User @relation(fields: [authorId], references: [id])
+
+  topics      Topic[]
+  enrollments Enrollment[]
+  reviews     Review[]
+  sections    Section[]
+}
+
+model Topic {
+  id      String   @id @default(uuid())
+  name    String
+  courses Course[]
+  posts   Post[]
+}
+
+model Section {
+  id       String   @id @default(uuid())
+  title    String
+  duration Int
+  order    Int
+  courseId String
+  course   Course   @relation(fields: [courseId], references: [id])
+  lessons  Lesson[]
+}
+
+model Lesson {
+  id        String   @id @default(uuid())
+  title     String
+  video     String?
+  content   String?
+  files     String[]
+  links     String[]
+  duration  Int
+  order     Int
+  sectionId String
+  section   Section  @relation(fields: [sectionId], references: [id])
+}
+
+model Review {
+  userId    String
+  courseId  String
+  comment   String?
+  rating    Float
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId])
+}
+
+model Post {
+  id        String    @id @default(uuid())
+  authorId  String
+  title     String
+  image     String
+  content   String
+  createdAt DateTime  @default(now())
+  topics    Topic[]
+  likes     Like[]
+  comments  Comment[]
+  author    User      @relation(fields: [authorId], references: [id])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  postId    String
+  comment   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+}
+
+model Like {
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+
+  @@id([userId, postId])
+}
