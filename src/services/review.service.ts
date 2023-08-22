@@ -36,9 +36,8 @@ export namespace ReviewService {
 		}
 	};
 
-	export const updateReview = async (reviewData: ReviewData) => {
+	export const updateReview = async (userId: string, courseId: string, data: Partial<Review>) => {
 		try {
-			const { userId, courseId, comment, rating } = reviewData;
 			const updatedReview = await prisma.review.update({
 				where: {
 					userId_courseId: {
@@ -46,10 +45,7 @@ export namespace ReviewService {
 						courseId,
 					},
 				},
-				data: {
-					comment,
-					rating,
-				},
+				data: { ...data },
 			});
 			return updatedReview;
 		} catch (error: any) {
@@ -59,7 +55,7 @@ export namespace ReviewService {
 
 	export const deleteReview = async (userId: string, courseId: string) => {
 		try {
-			const deletedReview = await prisma.review.delete({
+			await prisma.review.delete({
 				where: {
 					userId_courseId: {
 						userId,
@@ -67,7 +63,6 @@ export namespace ReviewService {
 					},
 				},
 			});
-			return deletedReview;
 		} catch (error: any) {
 			throw new Error(error);
 		}

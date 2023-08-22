@@ -48,16 +48,17 @@ export namespace CommentController {
 
 	export const updateById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const { id, comment } = req.body;
+			const id = req.params.id;
+			const data = req.body;
 			if (!id) {
 				throw new Error("Please provide comment id in req body");
-			} else if (!comment) {
-				throw new Error("Please provide a comment id in req body");
+			} else if (!data.comment) {
+				throw new Error("Please provide a comment in req body");
 			}
-			const newComment = await CommentService.updateById({ id, comment });
-			return res.status(202).json({
+			const comment = await CommentService.updateById(id, data);
+			return res.status(201).json({
 				message: "Comment updated successfully",
-				comment: newComment,
+				comment,
 			});
 		} catch (error: any) {
 			throw new Error(error);
@@ -66,15 +67,12 @@ export namespace CommentController {
 
 	export const deleteById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const id = req.body.id;
+			const id = req.params.id;
 			if (!id) {
 				throw new Error("Please provide comment id in req body");
 			}
-			const deletedComment = await CommentService.deleteById(id);
-			return res.status(202).json({
-				message: "Comment deleted successfully",
-				comment: deletedComment,
-			});
+			await CommentService.deleteById(id);
+			return res.status(204).json({ message: "Comment deleted successfully" });
 		} catch (error: any) {
 			throw new Error(error);
 		}

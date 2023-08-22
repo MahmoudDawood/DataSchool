@@ -4,8 +4,8 @@ const postRouter = Router();
 
 postRouter.post("/", PostController.create); // Create a blog post
 postRouter.get("/", PostController.findAll); // Get all posts
-postRouter.get("/id", PostController.findById); // Get post by id
-postRouter.get("/:name", PostController.searchByName); // Search for post by name
+postRouter.get("/:id", PostController.findById); // Get post by id
+postRouter.get("/search", PostController.searchByName); // Search for post by name
 postRouter.put("/:id", PostController.updateById); // Update blog post by id
 postRouter.delete("/:id", PostController.deleteById); // Delete blog post by id
 

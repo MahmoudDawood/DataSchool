@@ -22,7 +22,7 @@ export namespace CourseService {
 
 	export const findById = async (id: string) => {
 		try {
-			const courses = await prisma.course.findMany({
+			const course = await prisma.course.findFirst({
 				where: { id },
 				include: {
 					instructor: true,
@@ -31,7 +31,7 @@ export namespace CourseService {
 					sections: true,
 				},
 			});
-			return courses;
+			return course;
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -87,7 +87,7 @@ export namespace CourseService {
 		try {
 			await prisma.course.delete({
 				where: {
-					id: String(id),
+					id: id,
 				},
 			});
 		} catch (error: any) {

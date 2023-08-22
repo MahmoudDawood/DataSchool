@@ -1,4 +1,5 @@
 import { Comment, PrismaClient } from "@prisma/client";
+import { PathOrFileDescriptor } from "fs";
 const prisma = new PrismaClient();
 
 export namespace CommentService {
@@ -36,13 +37,11 @@ export namespace CommentService {
 		}
 	};
 
-	type UpdatedCommentData = Pick<Comment, "id" | "comment">;
-	export const updateById = async (commentData: UpdatedCommentData) => {
+	export const updateById = async (id: string, updatedData: Partial<Comment>) => {
 		try {
-			const { id, comment } = commentData;
 			const updatedComment = await prisma.comment.update({
 				where: { id },
-				data: { comment },
+				data: { ...updatedData },
 			});
 			return updatedComment;
 		} catch (error: any) {
@@ -52,10 +51,9 @@ export namespace CommentService {
 
 	export const deleteById = async (id: string) => {
 		try {
-			const deletedComment = await prisma.comment.delete({
+			await prisma.comment.delete({
 				where: { id },
 			});
-			return deletedComment;
 		} catch (error: any) {
 			throw new Error(error);
 		}

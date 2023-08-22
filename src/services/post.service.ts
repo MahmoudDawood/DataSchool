@@ -2,6 +2,19 @@ import { Post, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export namespace PostService {
+	export const create = async (post: Omit<Post, "id" | "createdAt">) => {
+		try {
+			const newPost = await prisma.post.create({
+				data: {
+					...post,
+				},
+			});
+			return newPost;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
 	export const findAll = async () => {
 		try {
 			const posts = await prisma.post.findMany({});
@@ -34,29 +47,11 @@ export namespace PostService {
 		}
 	};
 
-	export const create = async (post: Omit<Post, "id" | "createdAt">) => {
-		try {
-			const newPost = await prisma.post.create({
-				data: {
-					...post,
-				},
-			});
-			return newPost;
-		} catch (error: any) {
-			throw new Error(error);
-		}
-	};
-
-	export const updateById = async (post: Omit<Post, "createdAt">) => {
+	export const updateById = async (id: string, updatedData: Partial<Post>) => {
 		try {
 			const updatedPost = await prisma.post.update({
-				where: { id: post.id },
-				data: {
-					authorId: post.authorId,
-					title: post.title,
-					image: post.image,
-					content: post.content,
-				},
+				where: { id },
+				data: { ...updatedData },
 			});
 			return updatedPost;
 		} catch (error: any) {
@@ -66,10 +61,9 @@ export namespace PostService {
 
 	export const deleteById = async (id: string) => {
 		try {
-			const deletedPost = await prisma.post.delete({
+			await prisma.post.delete({
 				where: { id },
 			});
-			return deletedPost;
 		} catch (error: any) {
 			throw new Error(error);
 		}

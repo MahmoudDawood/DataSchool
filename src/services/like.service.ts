@@ -3,10 +3,10 @@ const prisma = new PrismaClient();
 
 export namespace LikeService {
 	type LikeData = Omit<Like, "createdAt">;
-	export const create = async (like: LikeData) => {
+	export const create = async (newData: LikeData) => {
 		try {
 			const createdLike = await prisma.like.create({
-				data: { ...like },
+				data: { ...newData },
 			});
 			return createdLike;
 		} catch (error: any) {
@@ -49,7 +49,7 @@ export namespace LikeService {
 
 	export const deleteLike = async ({ userId, postId }: LikeData) => {
 		try {
-			const deletedLike = await prisma.like.delete({
+			await prisma.like.delete({
 				where: {
 					userId_postId: {
 						userId,
@@ -57,7 +57,6 @@ export namespace LikeService {
 					},
 				},
 			});
-			return deletedLike;
 		} catch (error: any) {
 			throw new Error(error);
 		}

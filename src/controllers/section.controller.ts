@@ -53,7 +53,7 @@ export namespace SectionController {
 			if (!id) {
 				throw new Error("Please provide section id in req parameters");
 			}
-			const section = await SectionService.deleteById(id);
+			await SectionService.deleteById(id);
 			return res.status(204).json({ message: "Section deleted successfully" });
 		} catch (error: any) {
 			throw new Error(error);
