@@ -15,4 +15,4 @@ userRouter.put("/profile/:id"); // Update profile
 userRouter.put("/me/password"); // Reset Password
 userRouter.delete("/:id");
 
-export default userRouter;
+export { userRouter };

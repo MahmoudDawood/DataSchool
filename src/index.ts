@@ -1,8 +1,13 @@
 import express, { ErrorRequestHandler, Express, NextFunction, Request, Response } from "express";
-import courseRouter from "./routers/course.router";
-import userRouter from "./routers/user.router";
-
-// import { courseRouter, userRouter } from "./routers/index";
+import {
+	commentRouter,
+	courseRouter,
+	likeRouter,
+	postRouter,
+	reviewRouter,
+	sectionRouter,
+	userRouter,
+} from "./routers";
 
 require("dotenv").config();
 const app: Express = express();
@@ -18,8 +23,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(requestMiddleware);
 
-app.use("/users", userRouter);
-app.use("courses", courseRouter);
+app.use("/user", userRouter);
+app.use("course", courseRouter);
+app.use("/post", postRouter);
+app.use("/review", reviewRouter);
+app.use("comment", commentRouter);
+app.use("like", likeRouter);
+app.use("section", sectionRouter);
 
 app.get("/", (req, res) => {
 	res.send("Hello world");

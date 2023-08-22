@@ -7,3 +7,5 @@ commentRouter.get("/:id", CommentController.getPostComments); // Get comments on
 commentRouter.get("/user/:id", CommentController.getUserComments); // Get user's comments
 commentRouter.put("/", CommentController.updateById); // Update a comment
 commentRouter.delete("/", CommentController.deleteById); // Delete a comment
+
+export { commentRouter };

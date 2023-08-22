@@ -72,9 +72,8 @@ export namespace ReviewController {
 				throw new Error("Please provide userId, and courseId in req body");
 			}
 			const deletedReview = await ReviewService.deleteReview(userId, courseId);
-			return res.status(401).json({
+			return res.status(204).json({
 				message: "Review deleted successfully",
-				review: deletedReview,
 			});
 		} catch (error: any) {
 			throw new Error(error);

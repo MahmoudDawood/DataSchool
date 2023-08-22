@@ -8,3 +8,5 @@ reviewRouter.get("/:id", ReviewController.getCourseReviews); // Get course revie
 reviewRouter.get("/user/:id", ReviewController.getUserReviews); // Get user reviews
 reviewRouter.put("/", ReviewController.updatedReview); // Update review
 reviewRouter.delete("/", ReviewController.deleteReview); // Delete review
+
+export { reviewRouter };

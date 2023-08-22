@@ -9,11 +9,12 @@ export namespace CourseService {
 		>
 	) => {
 		try {
-			const result = await prisma.course.create({
+			const newCourse = await prisma.course.create({
 				data: {
 					...course,
 				},
 			});
+			return newCourse;
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -22,18 +23,12 @@ export namespace CourseService {
 	export const findById = async (id: string) => {
 		try {
 			const courses = await prisma.course.findMany({
-				where: {
-					id: String(id),
-				},
-				select: {
-					title: true,
-					instructorId: true,
-					description: true,
-					preview: true,
-					duration: true,
-					price: true,
-					createdAt: true,
-					updatedAt: true,
+				where: { id },
+				include: {
+					instructor: true,
+					topics: true,
+					reviews: true,
+					sections: true,
 				},
 			});
 			return courses;
@@ -46,6 +41,7 @@ export namespace CourseService {
 		try {
 			const courses = await prisma.course.findMany({
 				// TODO: Include courses having topic names equal to name input
+				// TODO: Select only essential card info
 				where: {
 					title: { contains: nameInput },
 				},
@@ -68,6 +64,7 @@ export namespace CourseService {
 
 	export const findAll = async () => {
 		try {
+			// TODO: Select only essential card info
 			const courses = await prisma.course.findMany({
 				select: {
 					title: true,

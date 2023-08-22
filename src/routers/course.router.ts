@@ -10,4 +10,4 @@ courseRouter.get("/:id", CourseController.findById); // Get course info by id
 courseRouter.put("/id"); // Update a course
 courseRouter.delete("/:id", CourseController.deleteById); // Delete a post
 
-export default courseRouter;
+export { courseRouter };

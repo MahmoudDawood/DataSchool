@@ -33,6 +33,8 @@ export namespace PostController {
 
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
 		try {
+			// TODO: Convert content markdown to HTML using marked
+			// TODO: Sanitize the HTML content before storing it using DOMPurify
 			const { authorId, title, image, content } = req.body;
 			const newPost = await PostService.create({
 				authorId,
@@ -51,6 +53,8 @@ export namespace PostController {
 
 	export const updateById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
+			// TODO: Convert content markdown to HTML using marked
+			// TODO: Sanitize the HTML content before storing it using DOMPurify
 			const { id, authorId, title, image, content } = req.body;
 			if (!id) {
 				throw new Error("Provide post id in the request body");
@@ -78,7 +82,7 @@ export namespace PostController {
 				throw new Error("Provide post id in the request body");
 			}
 			const deletedPost = await PostService.updateById(postId);
-			return res.status(401).json({
+			return res.status(204).json({
 				message: "Post deleted successfully",
 				post: deletedPost,
 			});
