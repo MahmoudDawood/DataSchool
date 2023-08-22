@@ -2,12 +2,8 @@ import { Course, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export namespace CourseService {
-	export const create = async (
-		course: Pick<
-			Course,
-			"title" | "instructorId" | "description" | "duration" | "preview" | "price"
-		>
-	) => {
+	type CourseData = Omit<Course, "id" | "createdAt" | "updatedAt">;
+	export const create = async (course: CourseData) => {
 		try {
 			const newCourse = await prisma.course.create({
 				data: {
@@ -15,6 +11,25 @@ export namespace CourseService {
 				},
 			});
 			return newCourse;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
+	export const findAllCardInfo = async () => {
+		try {
+			// TODO: Order the courses by views or enrollments
+			const courses = await prisma.course.findMany({
+				// TODO: Include course photo
+				select: {
+					title: true,
+					description: true,
+					instructor: true,
+					duration: true,
+					price: true,
+				},
+			});
+			return courses;
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -37,23 +52,28 @@ export namespace CourseService {
 		}
 	};
 
-	export const findByName = async (nameInput: string) => {
+	export const searchByNameTopic = async (nameInput: string, topicsInput: string[]) => {
 		try {
 			const courses = await prisma.course.findMany({
-				// TODO: Include courses having topic names equal to name input
-				// TODO: Select only essential card info
+				// TODO: Order the courses by views or enrollments
 				where: {
-					title: { contains: nameInput },
+					OR: [
+						{ title: { contains: nameInput } },
+						{
+							topics: {
+								some: {
+									name: { in: topicsInput },
+								},
+							},
+						},
+					],
 				},
 				select: {
 					title: true,
-					instructorId: true,
 					description: true,
-					preview: true,
+					instructor: true,
 					duration: true,
 					price: true,
-					createdAt: true,
-					updatedAt: true,
 				},
 			});
 			return courses;
@@ -62,22 +82,15 @@ export namespace CourseService {
 		}
 	};
 
-	export const findAll = async () => {
+	export const updateById = async (id: string, dataUpdate: Partial<Course>) => {
 		try {
-			// TODO: Select only essential card info
-			const courses = await prisma.course.findMany({
-				select: {
-					title: true,
-					instructorId: true,
-					description: true,
-					preview: true,
-					duration: true,
-					price: true,
-					createdAt: true,
-					updatedAt: true,
+			const updatedCourse = await prisma.course.update({
+				where: { id },
+				data: {
+					...dataUpdate,
 				},
 			});
-			return courses;
+			return updatedCourse;
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -86,9 +99,7 @@ export namespace CourseService {
 	export const deleteById = async (id: string) => {
 		try {
 			await prisma.course.delete({
-				where: {
-					id: id,
-				},
+				where: { id },
 			});
 		} catch (error: any) {
 			throw new Error(error);

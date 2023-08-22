@@ -7,6 +7,7 @@ import {
 	postRouter,
 	reviewRouter,
 	sectionRouter,
+	topicRouter,
 	userRouter,
 } from "./routers";
 
@@ -26,12 +27,13 @@ app.use(requestMiddleware);
 
 app.use("/user", userRouter);
 app.use("course", courseRouter);
-app.use("/post", postRouter);
+app.use("enroll", enrollmentRouter);
+app.use("section", sectionRouter);
 app.use("/review", reviewRouter);
+app.use("topic", topicRouter);
+app.use("/post", postRouter);
 app.use("comment", commentRouter);
 app.use("like", likeRouter);
-app.use("section", sectionRouter);
-app.use("enroll", enrollmentRouter);
 
 app.get("/", (req, res) => {
 	res.send("Hello world");

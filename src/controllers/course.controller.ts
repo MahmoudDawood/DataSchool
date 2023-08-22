@@ -23,6 +23,15 @@ export namespace CourseController {
 		}
 	};
 
+	export const findAllCardInfo = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const courses = await CourseService.findAllCardInfo();
+			return res.status(200).json({ courses });
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
 	export const findById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
@@ -33,20 +42,34 @@ export namespace CourseController {
 		}
 	};
 
-	export const findByName = async (req: Request, res: Response, next: NextFunction) => {
+	export const searchByNameTopic = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const nameInput = req.body.name;
-			const courses = await CourseService.findByName(nameInput);
+			const name = String(req.query.name);
+			const topics = String(req.query.topics);
+			console.log("Topics query: ", topics);
+			const topicsArr = topics.split(",").map(topic => {
+				if (topic.includes("+")) {
+					return topic.split("+").join(" ");
+				}
+				return topic.trim();
+			});
+
+			const courses = await CourseService.searchByNameTopic(name, topicsArr);
 			return res.status(200).json({ courses });
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	};
 
-	export const findAll = async (req: Request, res: Response, next: NextFunction) => {
+	export const updateById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const courses = await CourseService.findAll();
-			return res.status(200).json({ courses });
+			const id = req.params.id;
+			const data = req.body;
+			const course = await CourseService.updateById(id, data);
+			res.status(201).json({
+				message: "Course is updated successfully",
+				course,
+			});
 		} catch (error: any) {
 			throw new Error(error);
 		}

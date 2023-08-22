@@ -5,4 +5,5 @@ export * from "./like.router";
 export * from "./post.router";
 export * from "./review.router";
 export * from "./section.router";
+export * from "./topic.router";
 export * from "./user.router";

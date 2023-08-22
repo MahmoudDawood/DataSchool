@@ -4,10 +4,10 @@ import { CourseController } from "../controllers/course.controller";
 const courseRouter = Router();
 
 courseRouter.post("/", CourseController.create); // Create a course
-courseRouter.get("/", CourseController.findAll); // Get all courses
-courseRouter.get("/name", CourseController.findByName); // Get course info by name // Decide priority by id or name
-courseRouter.get("/:id", CourseController.findById); // Get course info by id
-courseRouter.put("/id"); // Update a course
-courseRouter.delete("/:id", CourseController.deleteById); // Delete a post
+courseRouter.get("/", CourseController.findAllCardInfo); // Get all courses card info
+courseRouter.get("/:id", CourseController.findById); // Get course by id
+courseRouter.get("/search", CourseController.searchByNameTopic); // Search for course by name
+courseRouter.put("/:id", CourseController.updateById); // Update a course
+courseRouter.delete("/:id", CourseController.deleteById); // Delete a course
 
 export { courseRouter };
