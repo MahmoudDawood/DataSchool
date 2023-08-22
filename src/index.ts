@@ -2,6 +2,7 @@ import express, { ErrorRequestHandler, Express, NextFunction, Request, Response 
 import {
 	commentRouter,
 	courseRouter,
+	enrollmentRouter,
 	likeRouter,
 	postRouter,
 	reviewRouter,
@@ -30,6 +31,7 @@ app.use("/review", reviewRouter);
 app.use("comment", commentRouter);
 app.use("like", likeRouter);
 app.use("section", sectionRouter);
+app.use("enroll", enrollmentRouter);
 
 app.get("/", (req, res) => {
 	res.send("Hello world");
