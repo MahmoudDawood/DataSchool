@@ -31,27 +31,86 @@ export namespace UserService {
 			const user = await prisma.user.findFirst({
 				where: {
 					email: userData.email,
+					password: userData.password,
 				},
 			});
 			if (!user) {
 				throw new Error("Either username or password are wrong");
 			}
+			return; // Return token
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
 
-			if (user.password !== userData.password) {
-				throw new Error("Either username or password are wrong");
-			}
-
-			return;
+	export const logout = async () => {
+		// TODO: Expire the current refresher token
+		// TODO: Delete the token from the browser
+		try {
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	};
 
 	export const findAll = async () => {
-		// TODO: Make another one for instructors only, students only
 		try {
-			const users = await prisma.user.findMany({});
+			const users = await prisma.user.findMany({
+				where: {
+					Instructor: { is: null },
+				},
+			});
 			return users;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
+	export const findById = async (id: string) => {
+		try {
+			const user = await prisma.user.findFirst({
+				where: { id },
+				include: {
+					enrollments: true,
+				},
+			});
+			return user;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
+	export const updateById = async (id: string, newData: Partial<User>) => {
+		try {
+			const updatedUser = await prisma.user.update({
+				where: { id },
+				data: { ...newData },
+			});
+			return updatedUser;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
+	export const updatePassword = async (id: string, password: string) => {
+		try {
+			const updatedUser = await prisma.user.update({
+				where: { id },
+				data: { password },
+			});
+			return updatedUser;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
+	export const deleteById = async (id: string) => {
+		try {
+			await prisma.user.delete({
+				where: { id },
+				include: {
+					Instructor: true,
+				},
+			});
 		} catch (error: any) {
 			throw new Error(error);
 		}

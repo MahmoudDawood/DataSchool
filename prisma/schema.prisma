@@ -23,7 +23,7 @@ model User {
   reviews     Review[]
   comments    Comment[]
   likes       Like[]
-  Instructor  Instructor?
+  Instructor  Instructor? // lower case i
 }
 
 enum Gender {
