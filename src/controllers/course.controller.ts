@@ -16,17 +16,21 @@ export namespace CourseController {
 
 			return res.status(201).json({
 				message: "Course created successfully",
-				course,
+				data: course,
 			});
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	};
 
-	export const findAllCardInfo = async (req: Request, res: Response, next: NextFunction) => {
+	export const findAllCardInfo = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
 		try {
 			const courses = await CourseService.findAllCardInfo();
-			return res.status(200).json({ courses });
+			return res.status(200).json({ data: courses });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -36,13 +40,17 @@ export namespace CourseController {
 		try {
 			const id = req.params.id;
 			const course = await CourseService.findById(id);
-			return res.status(200).json({ course });
+			return res.status(200).json({ data: course });
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	};
 
-	export const searchByNameTopic = async (req: Request, res: Response, next: NextFunction) => {
+	export const searchByNameTopic = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
 		try {
 			const name = String(req.query.name);
 			const topics = String(req.query.topics);
@@ -55,7 +63,7 @@ export namespace CourseController {
 			});
 
 			const courses = await CourseService.searchByNameTopic(name, topicsArr);
-			return res.status(200).json({ courses });
+			return res.status(200).json({ data: courses });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -68,7 +76,7 @@ export namespace CourseController {
 			const course = await CourseService.updateById(id, data);
 			res.status(201).json({
 				message: "Course is updated successfully",
-				course,
+				data: course,
 			});
 		} catch (error: any) {
 			throw new Error(error);

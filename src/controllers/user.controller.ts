@@ -19,7 +19,7 @@ export namespace UserController {
 
 			return res.status(201).json({
 				message: "User created successfully",
-				user,
+				data: user,
 			});
 		} catch (error) {
 			next(error);
@@ -37,7 +37,7 @@ export namespace UserController {
 	export const findAll = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const users = await UserService.findAll();
-			return res.status(200).json({ users });
+			return res.status(200).json({ data: users });
 		} catch (error: any) {
 			next(new Error(error));
 		}
@@ -47,7 +47,7 @@ export namespace UserController {
 		try {
 			const id = req.params.id;
 			const user = await UserService.findById(id);
-			return res.status(200).json({ user });
+			return res.status(200).json({ data: user });
 		} catch (error: any) {
 			next(new Error(error));
 		}
@@ -60,7 +60,7 @@ export namespace UserController {
 			const user = await UserService.updateById(id, data);
 			return res.status(201).json({
 				message: "User updated successfully",
-				user,
+				data: user,
 			});
 		} catch (error: any) {
 			next(new Error(error));
@@ -79,7 +79,7 @@ export namespace UserController {
 			const user = await UserService.updatePassword(id, newPassword);
 			return res.status(201).json({
 				message: "User password updated successfully",
-				user,
+				data: user,
 			});
 		} catch (error: any) {
 			next(new Error(error));

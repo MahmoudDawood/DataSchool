@@ -9,7 +9,7 @@ export namespace InstructorController {
 			const instructor = await InstructorService.create(data);
 			return res.status(201).json({
 				message: "Instructor created successfully",
-				instructor,
+				data: instructor,
 			});
 		} catch (error: any) {
 			throw new Error(error);
@@ -20,7 +20,7 @@ export namespace InstructorController {
 		// TODO: Include a find all cards info only
 		try {
 			const instructors = await InstructorService.findAll();
-			return res.status(200).json({ instructors });
+			return res.status(200).json({ data: instructors });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -30,7 +30,7 @@ export namespace InstructorController {
 		try {
 			const id = req.params.id;
 			const instructor = await InstructorService.findById(id);
-			return res.status(200).json({ instructor });
+			return res.status(200).json({ data: instructor });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -43,7 +43,7 @@ export namespace InstructorController {
 			const instructor = await InstructorService.updatedById(id, data);
 			return res.status(201).json({
 				message: "Instructor updated successfully",
-				instructor,
+				data: instructor,
 			});
 		} catch (error: any) {
 			throw new Error(error);

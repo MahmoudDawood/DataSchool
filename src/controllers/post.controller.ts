@@ -15,7 +15,7 @@ export namespace PostController {
 			});
 			return res.status(201).json({
 				message: "Post created successfully",
-				post: newPost,
+				data: newPost,
 			});
 		} catch (error: any) {
 			throw new Error(error);
@@ -25,7 +25,7 @@ export namespace PostController {
 	export const findAll = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const posts = await PostService.findAll();
-			return res.status(200).json({ posts });
+			return res.status(200).json({ data: posts });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -35,7 +35,7 @@ export namespace PostController {
 		try {
 			const id = req.params.id;
 			const post = await PostService.findById(id);
-			return res.status(200).json({ post });
+			return res.status(200).json({ data: post });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -45,7 +45,7 @@ export namespace PostController {
 		try {
 			const name = String(req.query.name) || "";
 			const posts = await PostService.searchByName(name);
-			return res.status(200).json({ posts });
+			return res.status(200).json({ data: posts });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -63,7 +63,7 @@ export namespace PostController {
 			const updatedPost = await PostService.updateById(id, updatedData);
 			return res.status(201).json({
 				message: "Post updated successfully",
-				post: updatedPost,
+				data: updatedPost,
 			});
 		} catch (error: any) {
 			throw new Error(error);

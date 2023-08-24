@@ -8,7 +8,7 @@ export namespace TopicController {
 			const topic = await TopicService.create(data);
 			return res.status(201).json({
 				message: "Topic created successfully",
-				topic,
+				data: topic,
 			});
 		} catch (error: any) {
 			throw new Error(error);
@@ -18,7 +18,7 @@ export namespace TopicController {
 	export const findAll = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const topics = await TopicService.findAll();
-			return res.status(200).json({ topics });
+			return res.status(200).json({ data: topics });
 		} catch (error: any) {
 			throw new Error(error);
 		}

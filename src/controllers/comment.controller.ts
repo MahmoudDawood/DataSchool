@@ -13,34 +13,42 @@ export namespace CommentController {
 			const createdComment = await CommentService.create({ userId, postId, comment });
 			return res.status(201).json({
 				message: "Comment created successfully",
-				comment: createdComment,
+				data: createdComment,
 			});
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	};
 
-	export const getPostComments = async (req: Request, res: Response, next: NextFunction) => {
+	export const getPostComments = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
 		try {
 			const postId = req.params.id;
 			if (!postId) {
 				throw new Error("Please provide postId in req parameters");
 			}
 			const comments = await CommentService.getPostComments(postId);
-			return res.status(200).json({ comments });
+			return res.status(200).json({ data: comments });
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	};
 
-	export const getUserComments = async (req: Request, res: Response, next: NextFunction) => {
+	export const getUserComments = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
 		try {
 			const userId = req.params.id;
 			if (!userId) {
 				throw new Error("Please provide userId in req parameters");
 			}
 			const comments = await CommentService.getPostComments(userId);
-			return res.status(200).json({ comments });
+			return res.status(200).json({ data: comments });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -58,7 +66,7 @@ export namespace CommentController {
 			const comment = await CommentService.updateById(id, data);
 			return res.status(201).json({
 				message: "Comment updated successfully",
-				comment,
+				data: comment,
 			});
 		} catch (error: any) {
 			throw new Error(error);

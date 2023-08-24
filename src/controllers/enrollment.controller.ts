@@ -11,7 +11,7 @@ export namespace EnrollmentController {
 			const enrollment = await EnrollmentService.create({ userId, courseId });
 			return res.status(201).json({
 				message: "Enrollment created successfully",
-				enrollment,
+				data: enrollment,
 			});
 		} catch (error: any) {
 			throw new Error(error);
@@ -22,17 +22,21 @@ export namespace EnrollmentController {
 		try {
 			const userId = req.params.id;
 			const enrollments = await EnrollmentService.findByUserId(userId);
-			return res.status(200).json({ enrollments });
+			return res.status(200).json({ data: enrollments });
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	};
 
-	export const findByCourseId = async (req: Request, res: Response, next: NextFunction) => {
+	export const findByCourseId = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
 		try {
 			const courseId = req.params.id;
 			const enrollments = await EnrollmentService.findByCourseId(courseId);
-			return res.status(200).json({ enrollments });
+			return res.status(200).json({ data: enrollments });
 		} catch (error: any) {
 			throw new Error(error);
 		}

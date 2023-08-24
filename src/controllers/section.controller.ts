@@ -13,7 +13,7 @@ export namespace SectionController {
 			});
 			return res.status(201).json({
 				message: "Section created successfully",
-				section,
+				data: section,
 			});
 		} catch (error: any) {
 			throw new Error(error);
@@ -24,7 +24,7 @@ export namespace SectionController {
 		try {
 			const sectionId = req.params.id;
 			const section = await SectionService.findById(sectionId);
-			return res.status(200).json({ course: section });
+			return res.status(200).json({ data: section });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -35,12 +35,14 @@ export namespace SectionController {
 			const id = req.params.id;
 			const data = req.body;
 			if (!id || !data) {
-				throw new Error("Please provide section id in req parameters, and data in req body");
+				throw new Error(
+					"Please provide section id in req parameters, and data in req body"
+				);
 			}
 			const section = await SectionService.updateById(id, data);
 			return res.status(201).json({
 				message: "Section updated successfully",
-				section,
+				data: section,
 			});
 		} catch (error: any) {
 			throw new Error(error);
