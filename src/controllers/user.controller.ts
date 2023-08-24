@@ -17,11 +17,10 @@ export namespace UserController {
 				password,
 			});
 
-			res.status(201).json({
+			return res.status(201).json({
 				message: "User created successfully",
 				user,
 			});
-			next(user.user.id);
 		} catch (error) {
 			next(error);
 		}
@@ -68,7 +67,11 @@ export namespace UserController {
 		}
 	};
 
-	export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
+	export const updatePassword = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
 		try {
 			// TODO: Make it only available through email link
 			const id = req.params.id;
@@ -78,6 +81,15 @@ export namespace UserController {
 				message: "User password updated successfully",
 				user,
 			});
+		} catch (error: any) {
+			next(new Error(error));
+		}
+	};
+
+	export const logout = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			// TODO: Destroy current session, expire token and delete it
+			return res.status(204).json({ message: "User Logged out successfully" });
 		} catch (error: any) {
 			next(new Error(error));
 		}

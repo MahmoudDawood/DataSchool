@@ -1,20 +1,41 @@
-import { Instructor, PrismaClient } from "@prisma/client";
+import { Instructor, PrismaClient, User } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export namespace InstructorService {
-	export const create = async (data: Instructor) => {
+	export const create = async (data: Instructor & User) => {
 		try {
-			let { userId, jobTitle, about, photo, socialMedia } = data;
+			let {
+				firstName,
+				lastName,
+				gender,
+				phone,
+				email,
+				password,
+				jobTitle,
+				about,
+				photo,
+				socialMedia,
+			} = data;
 			if (!socialMedia) {
+				// TODO: Create a default JSON value, convert data to const
 				socialMedia = {};
 			}
 			const instructor = await prisma.instructor.create({
 				data: {
-					userId,
 					jobTitle,
 					about,
 					photo,
 					socialMedia,
+					user: {
+						create: {
+							firstName,
+							lastName,
+							gender,
+							phone,
+							email,
+							password,
+						},
+					},
 				},
 			});
 			return instructor;
@@ -47,9 +68,24 @@ export namespace InstructorService {
 		}
 	};
 
-	export const updatedById = async (userId: string, data: Partial<Instructor>) => {
+	type NewInstructorData = Instructor & Omit<User, "id" | "password">;
+	export const updatedById = async (userId: string, data: NewInstructorData) => {
 		try {
-			let { jobTitle, about, photo, socialMedia } = data;
+			let {
+				firstName,
+				lastName,
+				gender,
+				phone,
+				email,
+				jobTitle,
+				about,
+				photo,
+				socialMedia,
+			} = data;
+			if (!socialMedia) {
+				// TODO: Create a default JSON value, convert data to const
+				socialMedia = {};
+			}
 			if (!socialMedia) {
 				socialMedia = {};
 			}
@@ -60,6 +96,15 @@ export namespace InstructorService {
 					about,
 					photo,
 					socialMedia,
+					user: {
+						update: {
+							firstName,
+							lastName,
+							gender,
+							phone,
+							email,
+						},
+					},
 				},
 			});
 			return updatedInstructor;

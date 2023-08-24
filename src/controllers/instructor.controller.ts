@@ -5,24 +5,8 @@ import { UserService } from "../services/user.service";
 export namespace InstructorController {
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const { firstName, lastName, gender, phone, email, password } = req.body;
-			const user = await UserService.create({
-				firstName,
-				lastName,
-				gender,
-				phone,
-				email,
-				password,
-			});
-
-			const { jobTitle, about, photo, socialMedia } = req.body;
-			const instructor = await InstructorService.create({
-				userId: user.user.id,
-				jobTitle,
-				about,
-				photo,
-				socialMedia,
-			});
+			const data = req.body;
+			const instructor = await InstructorService.create(data);
 			return res.status(201).json({
 				message: "Instructor created successfully",
 				instructor,
@@ -55,24 +39,8 @@ export namespace InstructorController {
 	export const updatedById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
-			const { firstName, lastName, gender, phone, email } = req.body;
-
-			const user = await UserService.updateById(id, {
-				firstName,
-				lastName,
-				gender,
-				phone,
-				email,
-			});
-
-			const userId = user.id;
-			const { jobTitle, about, photo, socialMedia } = req.body;
-			const instructor = await InstructorService.updatedById(userId, {
-				jobTitle,
-				about,
-				photo,
-				socialMedia,
-			});
+			const data = req.body;
+			const instructor = await InstructorService.updatedById(id, data);
 			return res.status(201).json({
 				message: "Instructor updated successfully",
 				instructor,

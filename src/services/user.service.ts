@@ -18,7 +18,7 @@ export namespace UserService {
 			const newUser = await prisma.user.create({
 				data: { ...user },
 			});
-			return { user: newUser };
+			return newUser;
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -93,6 +93,7 @@ export namespace UserService {
 
 	export const updatePassword = async (id: string, password: string) => {
 		try {
+			// TODO: Hash Password before storing it
 			const updatedUser = await prisma.user.update({
 				where: { id },
 				data: { password },
