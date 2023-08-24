@@ -6,9 +6,9 @@ export namespace CommentController {
 		try {
 			const { userId, postId, comment } = req.body;
 			if (!userId || !postId) {
-				throw new Error("Please provide both userId and postId in req body");
+				return next(new Error("Please provide both userId and postId"));
 			} else if (!comment) {
-				throw new Error("Please provide a comment in the request body");
+				return next(new Error("Please provide a comment"));
 			}
 			const createdComment = await CommentService.create({ userId, postId, comment });
 			return res.status(201).json({
@@ -28,7 +28,7 @@ export namespace CommentController {
 		try {
 			const postId = req.params.id;
 			if (!postId) {
-				throw new Error("Please provide postId in req parameters");
+				return next(new Error("Please provide postId"));
 			}
 			const comments = await CommentService.getPostComments(postId);
 			return res.status(200).json({ data: comments });
@@ -45,7 +45,7 @@ export namespace CommentController {
 		try {
 			const userId = req.params.id;
 			if (!userId) {
-				throw new Error("Please provide userId in req parameters");
+				return next(new Error("Please provide userId"));
 			}
 			const comments = await CommentService.getPostComments(userId);
 			return res.status(200).json({ data: comments });
@@ -59,9 +59,9 @@ export namespace CommentController {
 			const id = req.params.id;
 			const data = req.body;
 			if (!id) {
-				throw new Error("Please provide comment id in req body");
+				return next(new Error("Please provide comment id"));
 			} else if (!data.comment) {
-				throw new Error("Please provide a comment in req body");
+				return next(new Error("Please provide a comment"));
 			}
 			const comment = await CommentService.updateById(id, data);
 			return res.status(201).json({
@@ -77,7 +77,7 @@ export namespace CommentController {
 		try {
 			const id = req.params.id;
 			if (!id) {
-				throw new Error("Please provide comment id in req body");
+				return next(new Error("Please provide comment id"));
 			}
 			await CommentService.deleteById(id);
 			return res.status(204).json({ message: "Comment deleted successfully" });

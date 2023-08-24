@@ -1,8 +1,15 @@
-import express, { ErrorRequestHandler, Express, NextFunction, Request, Response } from "express";
+import express, {
+	ErrorRequestHandler,
+	Express,
+	NextFunction,
+	Request,
+	Response,
+} from "express";
 import {
 	commentRouter,
 	courseRouter,
 	enrollmentRouter,
+	lessonRouter,
 	likeRouter,
 	postRouter,
 	reviewRouter,
@@ -25,15 +32,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(requestMiddleware);
 
-app.use("/user", userRouter);
-app.use("course", courseRouter);
+app.use("/users", userRouter);
+app.use("courses", courseRouter);
 app.use("enroll", enrollmentRouter);
-app.use("section", sectionRouter);
-app.use("/review", reviewRouter);
-app.use("topic", topicRouter);
-app.use("/post", postRouter);
-app.use("comment", commentRouter);
-app.use("like", likeRouter);
+app.use("sections", sectionRouter);
+app.use("/reviews", reviewRouter);
+app.use("topics", topicRouter);
+app.use("/posts", postRouter);
+app.use("comments", commentRouter);
+app.use("likes", likeRouter);
+app.use("lessons", lessonRouter);
 
 app.get("/", (req, res) => {
 	res.send("Hello world");

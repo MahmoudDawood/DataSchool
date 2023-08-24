@@ -34,6 +34,9 @@ export namespace PostController {
 	export const findById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Post id"));
+			}
 			const post = await PostService.findById(id);
 			return res.status(200).json({ data: post });
 		} catch (error: any) {
@@ -56,9 +59,12 @@ export namespace PostController {
 			// TODO: Convert content markdown to HTML using marked
 			// TODO: Sanitize the HTML content before storing it using DOMPurify
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Post id"));
+			}
 			const updatedData = req.body;
 			if (!id) {
-				throw new Error("Provide post id in the request body");
+				throw new Error("Provide post id");
 			}
 			const updatedPost = await PostService.updateById(id, updatedData);
 			return res.status(201).json({
@@ -72,11 +78,14 @@ export namespace PostController {
 
 	export const deleteById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const postId = req.params.id;
-			if (!postId) {
-				throw new Error("Provide post id in the request body");
+			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Post id"));
 			}
-			await PostService.deleteById(postId);
+			if (!id) {
+				throw new Error("Provide post id");
+			}
+			await PostService.deleteById(id);
 			return res.status(204).json({ message: "Post deleted successfully" });
 		} catch (error: any) {
 			throw new Error(error);

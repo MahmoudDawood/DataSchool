@@ -6,7 +6,7 @@ export namespace LikeController {
 		try {
 			const { userId, postId } = req.body;
 			if (!userId || !postId) {
-				throw new Error("Please provide both userId and postId in req body");
+				return next(new Error("Please provide both userId and postId"));
 			}
 			const like = await LikeService.create({ userId, postId });
 			return res.status(201).json({
@@ -26,7 +26,7 @@ export namespace LikeController {
 		try {
 			const postId = req.params.id;
 			if (!postId) {
-				throw new Error("Please provide postId in req parameters");
+				return next(new Error("Please provide postId"));
 			}
 			const count = await LikeService.findLikesCount(postId);
 			return res.status(200).json({ data: count });
@@ -43,7 +43,7 @@ export namespace LikeController {
 		try {
 			const userId = req.params.id;
 			if (!userId) {
-				throw new Error("Please provide userId in req parameters");
+				return next(new Error("Please provide userId"));
 			}
 			const likes = await LikeService.findUserLikes(userId);
 			return res.status(200).json({ data: likes });
@@ -56,7 +56,7 @@ export namespace LikeController {
 		try {
 			const { userId, postId } = req.params;
 			if (!userId || !postId) {
-				throw new Error("Please provide userId and postId in req parameters");
+				return next(new Error("Please provide userId and postId"));
 			}
 			const state = await LikeService.getLikeState({ userId, postId });
 			return res.status(200).json({ data: state });
@@ -69,7 +69,7 @@ export namespace LikeController {
 		try {
 			const { userId, postId } = req.params;
 			if (!userId || !postId) {
-				throw new Error("Please provide userId and postId in req body");
+				return next(new Error("Please provide userId and postId"));
 			}
 			const deletedLike = await LikeService.deleteLike({ userId, postId });
 			return res.status(204).json({ message: "Like deleted successfully" });

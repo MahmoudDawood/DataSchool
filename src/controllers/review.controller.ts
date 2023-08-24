@@ -6,7 +6,7 @@ export namespace ReviewController {
 		try {
 			const { userId, courseId, comment, rating } = req.body;
 			if (!userId || !courseId || !rating) {
-				throw new Error("Please provide userId, courseId, and rating in req body");
+				return next(new Error("Please provide userId, courseId, and rating"));
 			}
 			const createdReview = await ReviewService.create({
 				userId,
@@ -29,8 +29,11 @@ export namespace ReviewController {
 		next: NextFunction
 	) => {
 		try {
-			const courseId = req.params.id;
-			const reviews = await ReviewService.getCourseReviews(courseId);
+			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Course id"));
+			}
+			const reviews = await ReviewService.getCourseReviews(id);
 			return res.status(200).json({ data: reviews });
 		} catch (error: any) {
 			throw new Error(error);
@@ -43,8 +46,11 @@ export namespace ReviewController {
 		next: NextFunction
 	) => {
 		try {
-			const userId = req.params.id;
-			const reviews = await ReviewService.getUserReviews(userId);
+			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide User id"));
+			}
+			const reviews = await ReviewService.getUserReviews(id);
 			return res.status(200).json({ data: reviews });
 		} catch (error: any) {
 			throw new Error(error);
@@ -58,9 +64,12 @@ export namespace ReviewController {
 	) => {
 		try {
 			const { userId, courseId } = req.params;
+			if (!userId || !courseId) {
+				return next(new Error("Please provide Course id, User id"));
+			}
 			const data = req.body;
 			if (!data.rating) {
-				throw new Error("Please provide rating in req body");
+				return next(new Error("Please provide rating"));
 			}
 			const updatedReview = await ReviewService.updateReview(userId, courseId, data);
 			return res.status(201).json({
@@ -75,6 +84,9 @@ export namespace ReviewController {
 	export const deleteReview = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const { userId, courseId } = req.params;
+			if (!userId || !courseId) {
+				return next(new Error("Please provide Course id, User id"));
+			}
 			await ReviewService.deleteReview(userId, courseId);
 			return res.status(204).json({
 				message: "Review deleted successfully",

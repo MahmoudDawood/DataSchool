@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { SectionService } from "../services/section.service";
+import { LessonService } from "../services/lesson.service";
 
-export namespace SectionController {
+export namespace LessonController {
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const data = req.body;
-			const section = await SectionService.create(data);
+			const lessonData = req.body;
+			const lesson = await LessonService.create(lessonData);
 			return res.status(201).json({
-				message: "Section created successfully",
-				data: section,
+				message: "Lesson created successfully",
+				data: lesson,
 			});
 		} catch (error: any) {
 			throw new Error(error);
@@ -19,10 +19,10 @@ export namespace SectionController {
 		try {
 			const id = req.params.id;
 			if (!id) {
-				return next(new Error("Please provide Section id"));
+				return next(new Error("Please provide Lesson id"));
 			}
-			const section = await SectionService.findById(id);
-			return res.status(200).json({ data: section });
+			const lesson = await LessonService.findById(id);
+			return res.status(200).json({ data: lesson });
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -31,14 +31,14 @@ export namespace SectionController {
 	export const updateById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
-			const data = req.body;
-			if (!id || !data) {
-				return next(new Error("Please provide section id and data"));
+			const updatedData = req.body;
+			if (!id) {
+				return next(new Error("Please provide Lesson id"));
 			}
-			const section = await SectionService.updateById(id, data);
+			const lesson = await LessonService.updateById(id, updatedData);
 			return res.status(201).json({
-				message: "Section updated successfully",
-				data: section,
+				message: "Lesson updated successfully",
+				data: lesson,
 			});
 		} catch (error: any) {
 			throw new Error(error);
@@ -49,10 +49,10 @@ export namespace SectionController {
 		try {
 			const id = req.params.id;
 			if (!id) {
-				return next(new Error("Please provide section id"));
+				return next(new Error("Please provide Lesson id"));
 			}
-			await SectionService.deleteById(id);
-			return res.status(204).json({ message: "Section deleted successfully" });
+			await LessonService.deleteById(id);
+			return res.status(204).json({ message: "Lesson deleted successfully" });
 		} catch (error: any) {
 			throw new Error(error);
 		}

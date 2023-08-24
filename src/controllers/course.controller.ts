@@ -39,6 +39,9 @@ export namespace CourseController {
 	export const findById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Course id"));
+			}
 			const course = await CourseService.findById(id);
 			return res.status(200).json({ data: course });
 		} catch (error: any) {
@@ -72,6 +75,9 @@ export namespace CourseController {
 	export const updateById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Course id"));
+			}
 			const data = req.body;
 			const course = await CourseService.updateById(id, data);
 			res.status(201).json({
@@ -86,6 +92,9 @@ export namespace CourseController {
 	export const deleteById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = String(req.params.id);
+			if (!id) {
+				return next(new Error("Please provide Course id"));
+			}
 			await CourseService.deleteById(id);
 			res.status(204).json({ message: "Course is deleted successfully" });
 		} catch (error: any) {

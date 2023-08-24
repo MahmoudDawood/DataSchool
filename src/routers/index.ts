@@ -1,6 +1,7 @@
 export * from "./comment.router";
 export * from "./course.router";
 export * from "./enrollment.router";
+export * from "./lesson.router";
 export * from "./like.router";
 export * from "./post.router";
 export * from "./review.router";

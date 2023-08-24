@@ -46,6 +46,9 @@ export namespace UserController {
 	export const findById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide User id"));
+			}
 			const user = await UserService.findById(id);
 			return res.status(200).json({ data: user });
 		} catch (error: any) {
@@ -56,6 +59,9 @@ export namespace UserController {
 	export const updateById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide User id"));
+			}
 			const data = req.body;
 			const user = await UserService.updateById(id, data);
 			return res.status(201).json({
@@ -75,6 +81,9 @@ export namespace UserController {
 		try {
 			// TODO: Make it only available through email link
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide User id"));
+			}
 			const newPassword = req.body.password;
 			const user = await UserService.updatePassword(id, newPassword);
 			return res.status(201).json({
@@ -98,6 +107,9 @@ export namespace UserController {
 	export const deleteById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide User id"));
+			}
 			await UserService.deleteById(id);
 			return res.status(204).json({ message: "User deleted successfully" });
 		} catch (error: any) {

@@ -29,6 +29,9 @@ export namespace InstructorController {
 	export const findById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Instructor id"));
+			}
 			const instructor = await InstructorService.findById(id);
 			return res.status(200).json({ data: instructor });
 		} catch (error: any) {
@@ -39,6 +42,9 @@ export namespace InstructorController {
 	export const updatedById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Instructor id"));
+			}
 			const data = req.body;
 			const instructor = await InstructorService.updatedById(id, data);
 			return res.status(201).json({

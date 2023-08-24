@@ -27,6 +27,9 @@ export namespace TopicController {
 	export const deleteById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Topic id"));
+			}
 			await TopicService.deleteById(id);
 			return res.status(204).json({ message: "Topic deleted successfully" });
 		} catch (error: any) {
