@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { InstructorService } from "../services/instructor.service";
-import { UserService } from "../services/user.service";
 
 export namespace InstructorController {
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,7 +11,7 @@ export namespace InstructorController {
 				data: instructor,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -22,7 +21,7 @@ export namespace InstructorController {
 			const instructors = await InstructorService.findAll();
 			return res.status(200).json({ data: instructors });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -35,7 +34,7 @@ export namespace InstructorController {
 			const instructor = await InstructorService.findById(id);
 			return res.status(200).json({ data: instructor });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -52,7 +51,7 @@ export namespace InstructorController {
 				data: instructor,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 }

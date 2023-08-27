@@ -11,7 +11,7 @@ export namespace SectionController {
 				data: section,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -24,7 +24,7 @@ export namespace SectionController {
 			const section = await SectionService.findById(id);
 			return res.status(200).json({ data: section });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -41,7 +41,7 @@ export namespace SectionController {
 				data: section,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -54,7 +54,7 @@ export namespace SectionController {
 			await SectionService.deleteById(id);
 			return res.status(204).json({ message: "Section deleted successfully" });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 }

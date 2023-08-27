@@ -100,6 +100,7 @@ export namespace UserController {
 
 	export const logout = async (req: Request, res: Response, next: NextFunction) => {
 		try {
+			// const id = req.params.id;
 			// TODO: Destroy current session, expire token and delete it
 			return res.status(204).json({ message: "User Logged out successfully" });
 		} catch (error: any) {

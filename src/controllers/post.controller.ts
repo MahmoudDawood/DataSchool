@@ -18,7 +18,7 @@ export namespace PostController {
 				data: newPost,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -27,7 +27,7 @@ export namespace PostController {
 			const posts = await PostService.findAll();
 			return res.status(200).json({ data: posts });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -40,7 +40,7 @@ export namespace PostController {
 			const post = await PostService.findById(id);
 			return res.status(200).json({ data: post });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -50,7 +50,7 @@ export namespace PostController {
 			const posts = await PostService.searchByName(name);
 			return res.status(200).json({ data: posts });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -72,7 +72,7 @@ export namespace PostController {
 				data: updatedPost,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -88,7 +88,7 @@ export namespace PostController {
 			await PostService.deleteById(id);
 			return res.status(204).json({ message: "Post deleted successfully" });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 }

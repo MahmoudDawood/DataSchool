@@ -19,7 +19,7 @@ export namespace ReviewController {
 				data: createdReview,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -36,7 +36,7 @@ export namespace ReviewController {
 			const reviews = await ReviewService.getCourseReviews(id);
 			return res.status(200).json({ data: reviews });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -53,7 +53,7 @@ export namespace ReviewController {
 			const reviews = await ReviewService.getUserReviews(id);
 			return res.status(200).json({ data: reviews });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -77,7 +77,7 @@ export namespace ReviewController {
 				data: updatedReview,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -92,7 +92,7 @@ export namespace ReviewController {
 				message: "Review deleted successfully",
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 }

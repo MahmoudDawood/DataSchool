@@ -14,7 +14,7 @@ export namespace LikeController {
 				data: like,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -31,7 +31,7 @@ export namespace LikeController {
 			const count = await LikeService.findLikesCount(postId);
 			return res.status(200).json({ data: count });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -48,7 +48,7 @@ export namespace LikeController {
 			const likes = await LikeService.findUserLikes(userId);
 			return res.status(200).json({ data: likes });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -61,7 +61,7 @@ export namespace LikeController {
 			const state = await LikeService.getLikeState({ userId, postId });
 			return res.status(200).json({ data: state });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -74,7 +74,7 @@ export namespace LikeController {
 			const deletedLike = await LikeService.deleteLike({ userId, postId });
 			return res.status(204).json({ message: "Like deleted successfully" });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 }

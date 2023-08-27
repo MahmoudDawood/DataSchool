@@ -16,7 +16,7 @@ export namespace CommentController {
 				data: createdComment,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -33,7 +33,7 @@ export namespace CommentController {
 			const comments = await CommentService.getPostComments(postId);
 			return res.status(200).json({ data: comments });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -50,7 +50,7 @@ export namespace CommentController {
 			const comments = await CommentService.getPostComments(userId);
 			return res.status(200).json({ data: comments });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -69,7 +69,7 @@ export namespace CommentController {
 				data: comment,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -82,7 +82,7 @@ export namespace CommentController {
 			await CommentService.deleteById(id);
 			return res.status(204).json({ message: "Comment deleted successfully" });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 }

@@ -11,7 +11,7 @@ export namespace TopicController {
 				data: topic,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -20,7 +20,7 @@ export namespace TopicController {
 			const topics = await TopicService.findAll();
 			return res.status(200).json({ data: topics });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -34,7 +34,7 @@ export namespace TopicController {
 			await TopicService.deleteById(id);
 			return res.status(204).json({ message: "Topic deleted successfully" });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 }

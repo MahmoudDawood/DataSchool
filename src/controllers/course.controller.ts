@@ -2,9 +2,20 @@ import { NextFunction, Request, Response } from "express";
 import { CourseService } from "../services/course.service";
 
 export namespace CourseController {
+	// TODO:
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const { title, instructorId, description, duration, preview, price } = req.body;
+			const {
+				title,
+				instructorId,
+				description,
+				duration,
+				preview,
+				price,
+				outcomes,
+				photo,
+				// topics,
+			} = req.body;
 			const course = await CourseService.create({
 				title,
 				instructorId,
@@ -12,6 +23,9 @@ export namespace CourseController {
 				duration,
 				preview,
 				price,
+				outcomes,
+				photo,
+				// topics,
 			});
 
 			return res.status(201).json({
@@ -19,7 +33,7 @@ export namespace CourseController {
 				data: course,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -32,7 +46,7 @@ export namespace CourseController {
 			const courses = await CourseService.findAllCardInfo();
 			return res.status(200).json({ data: courses });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -45,7 +59,7 @@ export namespace CourseController {
 			const course = await CourseService.findById(id);
 			return res.status(200).json({ data: course });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -57,6 +71,7 @@ export namespace CourseController {
 		try {
 			const name = String(req.query.name);
 			const topics = String(req.query.topics);
+			console.log("Name query: ", name);
 			console.log("Topics query: ", topics);
 			const topicsArr = topics.split(",").map(topic => {
 				if (topic.includes("+")) {
@@ -68,7 +83,7 @@ export namespace CourseController {
 			const courses = await CourseService.searchByNameTopic(name, topicsArr);
 			return res.status(200).json({ data: courses });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -85,7 +100,7 @@ export namespace CourseController {
 				data: course,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -98,7 +113,7 @@ export namespace CourseController {
 			await CourseService.deleteById(id);
 			res.status(204).json({ message: "Course is deleted successfully" });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 }

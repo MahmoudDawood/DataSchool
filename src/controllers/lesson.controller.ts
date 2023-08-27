@@ -11,7 +11,7 @@ export namespace LessonController {
 				data: lesson,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -24,7 +24,7 @@ export namespace LessonController {
 			const lesson = await LessonService.findById(id);
 			return res.status(200).json({ data: lesson });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -41,7 +41,7 @@ export namespace LessonController {
 				data: lesson,
 			});
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 
@@ -54,7 +54,7 @@ export namespace LessonController {
 			await LessonService.deleteById(id);
 			return res.status(204).json({ message: "Lesson deleted successfully" });
 		} catch (error: any) {
-			throw new Error(error);
+			next(new Error(error));
 		}
 	};
 }
