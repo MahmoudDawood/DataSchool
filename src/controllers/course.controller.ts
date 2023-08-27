@@ -14,7 +14,6 @@ export namespace CourseController {
 				price,
 				outcomes,
 				photo,
-				// topics,
 			} = req.body;
 			const course = await CourseService.create({
 				title,
@@ -25,7 +24,6 @@ export namespace CourseController {
 				price,
 				outcomes,
 				photo,
-				// topics,
 			});
 
 			return res.status(201).json({
@@ -70,7 +68,7 @@ export namespace CourseController {
 	) => {
 		try {
 			const name = String(req.query.name);
-			const topics = String(req.query.topics);
+			const topics = decodeURIComponent(req.query.topics as string);
 			console.log("Name query: ", name);
 			console.log("Topics query: ", topics);
 			const topicsArr = topics.split(",").map(topic => {
@@ -79,6 +77,7 @@ export namespace CourseController {
 				}
 				return topic.trim();
 			});
+			console.log(topicsArr);
 
 			const courses = await CourseService.searchByNameTopic(name, topicsArr);
 			return res.status(200).json({ data: courses });
@@ -97,6 +96,41 @@ export namespace CourseController {
 			const course = await CourseService.updateById(id, data);
 			res.status(201).json({
 				message: "Course is updated successfully",
+				data: course,
+			});
+		} catch (error: any) {
+			next(new Error(error));
+		}
+	};
+
+	export const attachTopics = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			console.log("Attaching");
+			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Course id"));
+			}
+			const topics = req.body.topics;
+			const course = await CourseService.attachTopics(id, topics);
+			res.status(201).json({
+				message: "Topics attached to course successfully",
+				data: course,
+			});
+		} catch (error: any) {
+			next(new Error(error));
+		}
+	};
+
+	export const detachTopics = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const id = req.params.id;
+			if (!id) {
+				return next(new Error("Please provide Course id"));
+			}
+			const topics = req.body.topics;
+			const course = await CourseService.detachTopics(id, topics);
+			res.status(204).json({
+				message: "Topic detached to course successfully",
 				data: course,
 			});
 		} catch (error: any) {

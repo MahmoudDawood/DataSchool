@@ -2,14 +2,14 @@ import { Course, PrismaClient, Topic } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export namespace CourseService {
-	type CourseData = Omit<Course, "id" | "createdAt" | "updatedAt">;
+	type CourseData = Omit<Course, "id" | "createdAt" | "updatedAt" | "rating" | "views">;
 	export const create = async (courseData: CourseData) => {
 		try {
-			const { title, instructorId, description, duration, preview, price } = courseData;
 			const newCourse = await prisma.course.create({
 				data: {
 					...courseData,
 				},
+				include: { topics: true },
 			});
 			return newCourse;
 		} catch (error: any) {
@@ -23,11 +23,14 @@ export namespace CourseService {
 			const courses = await prisma.course.findMany({
 				// TODO: Include course photo
 				select: {
+					id: true,
 					title: true,
 					description: true,
 					instructor: true,
 					duration: true,
 					price: true,
+					rating: true,
+					topics: true,
 				},
 			});
 			return courses;
@@ -59,11 +62,11 @@ export namespace CourseService {
 				// TODO: Order the courses by views or enrollments
 				where: {
 					OR: [
-						{ title: { contains: nameInput } },
+						{ title: { contains: nameInput, mode: "insensitive" } },
 						{
 							topics: {
 								some: {
-									name: { in: topicsInput },
+									name: { in: topicsInput, mode: "insensitive" }, // values are fixed, no need for mode here
 								},
 							},
 						},
@@ -75,6 +78,7 @@ export namespace CourseService {
 					instructor: true,
 					duration: true,
 					price: true,
+					topics: true,
 				},
 			});
 			return courses;
@@ -92,6 +96,40 @@ export namespace CourseService {
 				},
 			});
 			return updatedCourse;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
+	export const attachTopics = async (id: string, topics: string[]) => {
+		try {
+			const course = await prisma.course.update({
+				where: { id },
+				data: {
+					topics: {
+						connect: topics.map(topic => ({ id: topic })),
+					},
+				},
+				include: { topics: true },
+			});
+			return course;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
+	export const detachTopics = async (id: string, topics: string[]) => {
+		try {
+			const course = await prisma.course.update({
+				where: { id },
+				data: {
+					topics: {
+						disconnect: topics.map(topic => ({ id: topic })),
+					},
+				},
+				include: { topics: true },
+			});
+			return course;
 		} catch (error: any) {
 			throw new Error(error);
 		}
