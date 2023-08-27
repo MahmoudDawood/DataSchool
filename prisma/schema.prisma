@@ -23,7 +23,7 @@ model User {
   reviews     Review[]
   comments    Comment[]
   likes       Like[]
-  Instructor  Instructor? // lower case i
+  instructor  Instructor?
 }
 
 enum Gender {
@@ -35,21 +35,23 @@ model Instructor {
   jobTitle    String
   about       String
   photo       String?
-  socialMedia Json
+  socialMedia Json?
   userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   courses     Course[]
   posts       Post[]
 }
 
 model Enrollment {
-  userId     String
-  courseId   String
-  enrolledAt DateTime @default(now())
-  progress   Int      @default(0)
-  currLesson Int      @default(1)
-  user       User     @relation(fields: [userId], references: [id])
-  course     Course   @relation(fields: [courseId], references: [id])
+  userId        String
+  courseId      String
+  enrolledAt    DateTime @default(now())
+  payment       Float
+  originalPrice Float
+  progress      Int      @default(0)
+  currentLesson Int      @default(1)
+  user          User     @relation(fields: [userId], references: [id], onDelete: NoAction)
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: NoAction)
 
   @@id([userId, courseId])
 }
@@ -59,12 +61,15 @@ model Course {
   title        String       @unique
   instructorId String
   description  String
+  outcomes     String[]
   preview      String
   duration     Int          @default(0)
   price        Float
+  photo        String?
+  views        Int          @default(0)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-  instructor   Instructor   @relation(fields: [instructorId], references: [userId])
+  instructor   Instructor   @relation(fields: [instructorId], references: [userId], onDelete: NoAction, onUpdate: Cascade)
   topics       Topic[]
   enrollments  Enrollment[]
   reviews      Review[]
@@ -84,7 +89,7 @@ model Section {
   duration Int      @default(0)
   order    Int
   courseId String
-  course   Course   @relation(fields: [courseId], references: [id])
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   lessons  Lesson[]
 }
 
@@ -98,7 +103,7 @@ model Lesson {
   duration  Int
   order     Int
   sectionId String
-  section   Section  @relation(fields: [sectionId], references: [id])
+  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 }
 
 model Review {
@@ -107,8 +112,8 @@ model Review {
   comment   String?
   rating    Float
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  course    Course   @relation(fields: [courseId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@id([userId, courseId])
 }
@@ -120,7 +125,7 @@ model Post {
   image     String?
   content   String
   createdAt DateTime   @default(now())
-  author    Instructor @relation(fields: [authorId], references: [userId])
+  author    Instructor @relation(fields: [authorId], references: [userId], onDelete: NoAction)
   topics    Topic[]
   likes     Like[]
   comments  Comment[]
@@ -132,16 +137,16 @@ model Comment {
   postId    String
   comment   String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model Like {
   userId    String
   postId    String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@id([userId, postId])
 }
