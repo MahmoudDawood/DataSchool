@@ -1,13 +1,14 @@
-import { Course, PrismaClient } from "@prisma/client";
+import { Course, PrismaClient, Topic } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export namespace CourseService {
 	type CourseData = Omit<Course, "id" | "createdAt" | "updatedAt">;
-	export const create = async (course: CourseData) => {
+	export const create = async (courseData: CourseData) => {
 		try {
+			const { title, instructorId, description, duration, preview, price } = courseData;
 			const newCourse = await prisma.course.create({
 				data: {
-					...course,
+					...courseData,
 				},
 			});
 			return newCourse;

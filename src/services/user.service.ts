@@ -8,12 +8,14 @@ export namespace UserService {
 		try {
 			const userExists = await prisma.user.findFirst({
 				where: {
-					email: user.email,
+					OR: [{ email: user.email }, { phone: user.phone }],
 				},
 			});
 
 			if (userExists) {
-				throw new Error("A user with this email already exists");
+				console.log({ userExists });
+				throw new Error("A user with this email or phone already exists");
+				// TODO: Split email and phone validations
 			}
 			const newUser = await prisma.user.create({
 				data: { ...user },

@@ -4,6 +4,6 @@ const topicRouter = Router();
 
 topicRouter.post("/", TopicController.create); // Create topic
 topicRouter.get("/", TopicController.findAll); // Create all existing topics
-topicRouter.delete("/:id"); // Delete topic
+topicRouter.delete("/:id", TopicController.deleteById); // Delete topic
 
 export { topicRouter };

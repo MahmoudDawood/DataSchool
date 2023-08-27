@@ -26,6 +26,7 @@ export namespace TopicController {
 
 	export const deleteById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
+			console.log("delete func");
 			const id = req.params.id;
 			if (!id) {
 				return next(new Error("Please provide Topic id"));

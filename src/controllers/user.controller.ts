@@ -5,9 +5,12 @@ export namespace UserController {
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
 		// TODO: Check express validators errors to return them
 		try {
-			let { firstName, lastName, gender, phone, email, password } = req.body;
-			gender = gender.toUpperCase();
-
+			const { firstName, lastName, gender, phone, email, password } = req.body;
+			if (!firstName || !lastName || !gender || !phone || !email || !password) {
+				return next(
+					new Error("Please provide first, last name, gender, phone, email, password")
+				);
+			}
 			const user = await UserService.create({
 				firstName,
 				lastName,

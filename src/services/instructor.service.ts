@@ -37,6 +37,7 @@ export namespace InstructorService {
 						},
 					},
 				},
+				include: { user: true },
 			});
 			return instructor;
 		} catch (error: any) {
@@ -61,6 +62,7 @@ export namespace InstructorService {
 		try {
 			const instructor = await prisma.instructor.findFirst({
 				where: { userId },
+				include: { user: true },
 			});
 			return instructor;
 		} catch (error: any) {
@@ -106,6 +108,7 @@ export namespace InstructorService {
 						},
 					},
 				},
+				include: { user: true },
 			});
 			return updatedInstructor;
 		} catch (error: any) {
