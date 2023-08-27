@@ -2,11 +2,23 @@ import { Enrollment, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export namespace EnrollmentService {
-	type EnrollData = Pick<Enrollment, "userId" | "courseId">;
+	type EnrollData = Pick<Enrollment, "userId" | "courseId" | "payment">;
 	export const create = async (data: EnrollData) => {
 		try {
+			const course = await prisma.course.findFirst({
+				where: {
+					id: data.courseId,
+				},
+				select: {
+					price: true,
+				},
+			});
+			if (!course || !course.price) {
+				throw new Error("Couldn't fetch course price");
+			}
+			const originalPrice = course.price;
 			const enrollment = await prisma.enrollment.create({
-				data: { ...data },
+				data: { ...data, originalPrice },
 			});
 			return enrollment;
 		} catch (error: any) {

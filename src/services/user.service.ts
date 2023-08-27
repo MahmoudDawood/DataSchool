@@ -35,6 +35,9 @@ export namespace UserService {
 					email: userData.email,
 					password: userData.password,
 				},
+				include: {
+					instructor: true,
+				},
 			});
 			if (!user) {
 				throw new Error("Either username or password are wrong");
@@ -58,7 +61,13 @@ export namespace UserService {
 		try {
 			const users = await prisma.user.findMany({
 				where: {
-					Instructor: { is: null },
+					instructor: { is: null },
+				},
+				include: {
+					enrollments: true,
+				},
+				orderBy: {
+					createdAt: "desc",
 				},
 			});
 			return users;
@@ -110,9 +119,6 @@ export namespace UserService {
 		try {
 			await prisma.user.delete({
 				where: { id },
-				include: {
-					Instructor: true,
-				},
 			});
 		} catch (error: any) {
 			throw new Error(error);

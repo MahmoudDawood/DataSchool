@@ -36,7 +36,11 @@ export namespace ReviewService {
 		}
 	};
 
-	export const updateReview = async (userId: string, courseId: string, data: Partial<Review>) => {
+	export const updateReview = async (
+		userId: string,
+		courseId: string,
+		data: Partial<Review>
+	) => {
 		try {
 			const updatedReview = await prisma.review.update({
 				where: {

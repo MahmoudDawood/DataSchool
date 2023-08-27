@@ -62,7 +62,7 @@ export namespace InstructorService {
 		try {
 			const instructor = await prisma.instructor.findFirst({
 				where: { userId },
-				include: { user: true },
+				include: { user: true, courses: true, posts: true },
 			});
 			return instructor;
 		} catch (error: any) {
@@ -86,9 +86,6 @@ export namespace InstructorService {
 			} = data;
 			if (!socialMedia) {
 				// TODO: Create a default JSON value, convert data to const
-				socialMedia = {};
-			}
-			if (!socialMedia) {
 				socialMedia = {};
 			}
 			const updatedInstructor = await prisma.instructor.update({

@@ -39,7 +39,7 @@ export namespace PostService {
 		try {
 			const post = await prisma.post.findFirst({
 				where: {
-					title: { contains: name },
+					title: { contains: name, mode: "insensitive" },
 				},
 			});
 		} catch (error: any) {

@@ -10,10 +10,13 @@ export const errorHandler = (
 		err.message = "Something went wrong!";
 	}
 	if (err.name === "Validation Error") {
-		return res.status(400).json({ message: err.message, stack: err.stack });
+		return res.status(400).json({
+			message: err.message,
+			// stack: err.stack,
+		});
 	}
 	return res.status(statusCode).json({
 		message: err.message,
-		stack: err.stack,
+		// stack: err.stack,
 	});
 };

@@ -16,7 +16,11 @@ export namespace TopicService {
 
 	export const findAll = async () => {
 		try {
-			const topics = await prisma.topic.findMany({});
+			const topics = await prisma.topic.findMany({
+				orderBy: {
+					name: "asc",
+				},
+			});
 			return topics;
 		} catch (error: any) {
 			throw new Error(error);

@@ -15,7 +15,7 @@ userRouter.get("/instructors/:id", InstructorController.findById); // Get Instru
 userRouter.put("/:id", UserController.updateById); // Update user profile
 userRouter.put("/instructors/:id", InstructorController.updatedById); // Update Instructor profile
 userRouter.put("/password/:id", UserController.updatePassword); // Reset Password
-userRouter.delete("/logout", UserController.logout); // Logout
+userRouter.delete("/logout/:id", UserController.logout); // Logout
 userRouter.delete("/:id", UserController.deleteById); // Delete User (Private)
 
 export { userRouter };

@@ -31,8 +31,8 @@ CREATE TABLE "Enrollment" (
     "enrolledAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "payment" DOUBLE PRECISION NOT NULL,
     "originalPrice" DOUBLE PRECISION NOT NULL,
-    "progress" INTEGER NOT NULL DEFAULT 0,
-    "currentLesson" INTEGER NOT NULL DEFAULT 1,
+    "progress" INTEGER DEFAULT 0,
+    "currentLesson" INTEGER DEFAULT 1,
 
     CONSTRAINT "Enrollment_pkey" PRIMARY KEY ("userId","courseId")
 );
@@ -48,6 +48,7 @@ CREATE TABLE "Course" (
     "duration" INTEGER NOT NULL DEFAULT 0,
     "price" DOUBLE PRECISION NOT NULL,
     "photo" TEXT,
+    "rating" DOUBLE PRECISION DEFAULT 0,
     "views" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
