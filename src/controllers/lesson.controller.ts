@@ -15,6 +15,15 @@ export namespace LessonController {
 		}
 	};
 
+	export const findAll = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const lessons = await LessonService.findAll();
+			return res.status(200).json({ data: lessons });
+		} catch (error: any) {
+			next(new Error(error));
+		}
+	};
+
 	export const findById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;
@@ -29,7 +38,9 @@ export namespace LessonController {
 	};
 
 	export const updateById = async (req: Request, res: Response, next: NextFunction) => {
+		console.log("Hi");
 		try {
+			console.log(req.body);
 			const id = req.params.id;
 			const updatedData = req.body;
 			if (!id) {

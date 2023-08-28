@@ -18,7 +18,7 @@ export namespace LikeController {
 		}
 	};
 
-	export const findLikesCount = async (
+	export const findPostLikes = async (
 		req: Request,
 		res: Response,
 		next: NextFunction
@@ -28,8 +28,8 @@ export namespace LikeController {
 			if (!postId) {
 				return next(new Error("Please provide postId"));
 			}
-			const count = await LikeService.findLikesCount(postId);
-			return res.status(200).json({ data: count });
+			const likes = await LikeService.findPostLikes(postId);
+			return res.status(200).json({ data: likes });
 		} catch (error: any) {
 			next(new Error(error));
 		}

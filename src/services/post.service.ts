@@ -15,9 +15,18 @@ export namespace PostService {
 		}
 	};
 
-	export const findAll = async () => {
+	export const findAllCardInfo = async () => {
 		try {
-			const posts = await prisma.post.findMany({});
+			const posts = await prisma.post.findMany({
+				select: {
+					id: true,
+					authorId: true,
+					title: true,
+					image: true,
+					topics: true,
+					createdAt: true,
+				},
+			});
 			return posts;
 		} catch (error: any) {
 			throw new Error(error);
@@ -35,13 +44,24 @@ export namespace PostService {
 		}
 	};
 
-	export const searchByName = async (name: string) => {
+	export const searchByNameTopic = async (nameInput: string, topicsInput: string[]) => {
 		try {
-			const post = await prisma.post.findFirst({
+			const posts = await prisma.post.findMany({
 				where: {
-					title: { contains: name, mode: "insensitive" },
+					OR: [
+						{ title: { contains: nameInput, mode: "insensitive" } },
+						{
+							topics: {
+								some: {
+									name: { in: topicsInput, mode: "insensitive" },
+								},
+							},
+						},
+					],
 				},
+				include: { topics: true },
 			});
+			return posts;
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -54,6 +74,36 @@ export namespace PostService {
 				data: { ...updatedData },
 			});
 			return updatedPost;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
+	export const attachTopics = async (id: string, topicsArr: string[]) => {
+		try {
+			const post = await prisma.post.update({
+				where: { id },
+				data: {
+					topics: { connect: topicsArr.map(topic => ({ id: topic })) },
+				},
+				include: { topics: true },
+			});
+			return post;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
+	export const detachTopics = async (id: string, topicsArr: string[]) => {
+		try {
+			const post = await prisma.post.update({
+				where: { id },
+				data: {
+					topics: { disconnect: topicsArr.map(topic => ({ id: topic })) },
+				},
+				include: { topics: true },
+			});
+			return post;
 		} catch (error: any) {
 			throw new Error(error);
 		}

@@ -14,12 +14,12 @@ export namespace LikeService {
 		}
 	};
 
-	export const findLikesCount = async (postId: string) => {
+	export const findPostLikes = async (postId: string) => {
 		try {
-			const likesCount = await prisma.like.count({
+			const likes = await prisma.like.findMany({
 				where: { postId },
 			});
-			return likesCount;
+			return likes;
 		} catch (error: any) {
 			throw new Error(error);
 		}

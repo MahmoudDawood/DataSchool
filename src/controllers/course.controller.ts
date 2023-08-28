@@ -71,13 +71,7 @@ export namespace CourseController {
 			const topics = decodeURIComponent(req.query.topics as string);
 			console.log("Name query: ", name);
 			console.log("Topics query: ", topics);
-			const topicsArr = topics.split(",").map(topic => {
-				if (topic.includes("+")) {
-					return topic.split("+").join(" ");
-				}
-				return topic.trim();
-			});
-			console.log(topicsArr);
+			const topicsArr = topics.split(",");
 
 			const courses = await CourseService.searchByNameTopic(name, topicsArr);
 			return res.status(200).json({ data: courses });

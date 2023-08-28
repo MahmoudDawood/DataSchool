@@ -16,6 +16,17 @@ export namespace SectionService {
 		}
 	};
 
+	export const findAll = async () => {
+		try {
+			const sections = await prisma.section.findMany({
+				include: { lessons: true },
+			});
+			return sections;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
 	export const findById = async (id: string) => {
 		try {
 			const section = await prisma.section.findFirst({

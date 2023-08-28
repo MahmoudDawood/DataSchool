@@ -22,9 +22,13 @@ export namespace PostController {
 		}
 	};
 
-	export const findAll = async (req: Request, res: Response, next: NextFunction) => {
+	export const findAllCardInfo = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
 		try {
-			const posts = await PostService.findAll();
+			const posts = await PostService.findAllCardInfo();
 			return res.status(200).json({ data: posts });
 		} catch (error: any) {
 			next(new Error(error));
@@ -46,8 +50,13 @@ export namespace PostController {
 
 	export const searchByName = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const name = String(req.query.name) || "";
-			const posts = await PostService.searchByName(name);
+			const name = String(req.query.name);
+			const topics = decodeURIComponent(req.query.topics as string);
+			console.log("Name query: ", name);
+			console.log("Topics query: ", topics);
+			const topicsArr = topics.split(",");
+
+			const posts = await PostService.searchByNameTopic(name, topicsArr);
 			return res.status(200).json({ data: posts });
 		} catch (error: any) {
 			next(new Error(error));
@@ -70,6 +79,40 @@ export namespace PostController {
 			return res.status(201).json({
 				message: "Post updated successfully",
 				data: updatedPost,
+			});
+		} catch (error: any) {
+			next(new Error(error));
+		}
+	};
+
+	export const attachTopics = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const id = req.params.id;
+			if (!id) {
+				next(new Error("Please provide post id"));
+			}
+			const topics = req.body.topics;
+			const post = await PostService.attachTopics(id, topics);
+			return res.status(201).json({
+				message: "Topics attached to post successfully",
+				data: post,
+			});
+		} catch (error: any) {
+			next(new Error(error));
+		}
+	};
+
+	export const detachTopics = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const id = req.params.id;
+			if (!id) {
+				next(new Error("Please provide post id"));
+			}
+			const topics = req.body.topics;
+			const post = await PostService.detachTopics(id, topics);
+			return res.status(204).json({
+				message: "Topics detached from post successfully",
+				data: post,
 			});
 		} catch (error: any) {
 			next(new Error(error));

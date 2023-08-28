@@ -15,7 +15,7 @@ export namespace CommentService {
 		}
 	};
 
-	export const getPostComments = async (postId: string) => {
+	export const findPostComments = async (postId: string) => {
 		try {
 			const comments = await prisma.comment.findMany({
 				where: { postId },
@@ -26,7 +26,7 @@ export namespace CommentService {
 		}
 	};
 
-	export const getUserComments = async (userId: string) => {
+	export const findUserComments = async (userId: string) => {
 		try {
 			const comments = await prisma.comment.findMany({
 				where: { userId },

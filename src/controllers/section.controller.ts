@@ -15,6 +15,15 @@ export namespace SectionController {
 		}
 	};
 
+	export const findAll = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const sections = await SectionService.findAll();
+			return res.status(200).json({ data: sections });
+		} catch (error: any) {
+			next(new Error(error));
+		}
+	};
+
 	export const findById = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const id = req.params.id;

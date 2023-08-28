@@ -20,7 +20,7 @@ export namespace CommentController {
 		}
 	};
 
-	export const getPostComments = async (
+	export const findPostComments = async (
 		req: Request,
 		res: Response,
 		next: NextFunction
@@ -30,14 +30,14 @@ export namespace CommentController {
 			if (!postId) {
 				return next(new Error("Please provide postId"));
 			}
-			const comments = await CommentService.getPostComments(postId);
+			const comments = await CommentService.findPostComments(postId);
 			return res.status(200).json({ data: comments });
 		} catch (error: any) {
 			next(new Error(error));
 		}
 	};
 
-	export const getUserComments = async (
+	export const findUserComments = async (
 		req: Request,
 		res: Response,
 		next: NextFunction
@@ -47,7 +47,7 @@ export namespace CommentController {
 			if (!userId) {
 				return next(new Error("Please provide userId"));
 			}
-			const comments = await CommentService.getPostComments(userId);
+			const comments = await CommentService.findUserComments(userId);
 			return res.status(200).json({ data: comments });
 		} catch (error: any) {
 			next(new Error(error));

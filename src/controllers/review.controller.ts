@@ -3,6 +3,7 @@ import { ReviewService } from "../services/review.service";
 
 export namespace ReviewController {
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
+		// TODO: Protect this route for enrolled users only
 		try {
 			const { userId, courseId, comment, rating } = req.body;
 			if (!userId || !courseId || !rating) {

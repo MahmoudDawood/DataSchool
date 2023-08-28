@@ -13,6 +13,15 @@ export namespace LessonService {
 		}
 	};
 
+	export const findAll = async () => {
+		try {
+			const lessons = await prisma.lesson.findMany({});
+			return lessons;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+	};
+
 	export const findById = async (id: string) => {
 		try {
 			const lesson = await prisma.lesson.findFirst({
