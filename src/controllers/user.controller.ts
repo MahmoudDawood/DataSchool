@@ -11,7 +11,7 @@ export namespace UserController {
 					new Error("Please provide first, last name, gender, phone, email, password")
 				);
 			}
-			const user = await UserService.create({
+			const token = await UserService.create({
 				firstName,
 				lastName,
 				gender,
@@ -22,7 +22,7 @@ export namespace UserController {
 
 			return res.status(201).json({
 				message: "User created successfully",
-				data: user,
+				data: token,
 			});
 		} catch (error) {
 			next(error);
@@ -30,13 +30,13 @@ export namespace UserController {
 	};
 
 	export const login = async (req: Request, res: Response, next: NextFunction) => {
-		// TODO: Check if user is an instructor
+		// TODO: Check -Split- if user is an instructor
 		try {
 			const data = req.body;
-			const user = await UserService.login(data);
+			const token = await UserService.login(data);
 			return res.status(201).json({
 				message: "User Logged In successfully",
-				data: user,
+				data: token,
 			});
 		} catch (error) {
 			next(error);

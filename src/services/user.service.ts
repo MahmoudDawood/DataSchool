@@ -1,15 +1,17 @@
 import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import { token } from "morgan";
 
 dotenv.config();
 const prisma = new PrismaClient();
 const salt = process.env.BCRYPT_SALT || "1";
 const pepper = process.env.BCRYPT_PEPPER;
+const tokenSecret = process.env.TOKEN_SECRET || "1";
 
 export namespace UserService {
 	export const create = async (userData: Omit<User, "id" | "createdAt">) => {
-		// TODO: Create jwt and return it in the response
 		try {
 			const userExists = await prisma.user.findFirst({
 				where: {
@@ -30,14 +32,14 @@ export namespace UserService {
 					password: hashedPassword,
 				},
 			});
-			return newUser;
+			const token = jwt.sign(newUser, tokenSecret);
+			return token;
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	};
 
 	export const login = async (userData: Pick<User, "email" | "password">) => {
-		// TODO: return JWT on authentication
 		try {
 			const user = await prisma.user.findFirst({
 				where: {
@@ -52,7 +54,8 @@ export namespace UserService {
 			if (!passwordMatch) {
 				throw new Error("Either username or password are wrong");
 			}
-			return passwordMatch; // Return token
+			const token = jwt.sign(user, tokenSecret);
+			return token;
 		} catch (error: any) {
 			throw new Error(error);
 		}
