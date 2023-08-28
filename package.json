@@ -25,11 +25,13 @@
 	"homepage": "https://github.com/MahmoudDawood/DataSchool#readme",
 	"dependencies": {
 		"@prisma/client": "^5.1.1",
+		"bcrypt": "^5.1.1",
 		"dotenv": "^16.3.1",
 		"express": "^4.18.2"
 	},
 	"devDependencies": {
 		"@trivago/prettier-plugin-sort-imports": "^4.2.0",
+		"@types/bcrypt": "^5.0.0",
 		"@types/express": "^4.17.17",
 		"@types/morgan": "^1.9.5",
 		"@types/node": "^20.5.0",

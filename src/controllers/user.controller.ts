@@ -32,6 +32,12 @@ export namespace UserController {
 	export const login = async (req: Request, res: Response, next: NextFunction) => {
 		// TODO: Check if user is an instructor
 		try {
+			const data = req.body;
+			const user = await UserService.login(data);
+			return res.status(201).json({
+				message: "User Logged In successfully",
+				data: user,
+			});
 		} catch (error) {
 			next(error);
 		}

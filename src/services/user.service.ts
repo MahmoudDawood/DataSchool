@@ -1,14 +1,19 @@
 import { PrismaClient, User } from "@prisma/client";
+import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+
+dotenv.config();
 const prisma = new PrismaClient();
+const salt = process.env.BCRYPT_SALT || "1";
+const pepper = process.env.BCRYPT_PEPPER;
 
 export namespace UserService {
-	export const create = async (user: Omit<User, "id" | "createdAt">) => {
-		// TODO: Hash user password with salt and pepper
+	export const create = async (userData: Omit<User, "id" | "createdAt">) => {
 		// TODO: Create jwt and return it in the response
 		try {
 			const userExists = await prisma.user.findFirst({
 				where: {
-					OR: [{ email: user.email }, { phone: user.phone }],
+					OR: [{ email: userData.email }, { phone: userData.phone }],
 				},
 			});
 
@@ -17,8 +22,13 @@ export namespace UserService {
 				throw new Error("A user with this email or phone already exists");
 				// TODO: Split email and phone validations
 			}
+			const pepperPassword = userData.password + pepper;
+			const hashedPassword = bcrypt.hashSync(pepperPassword, parseInt(salt));
 			const newUser = await prisma.user.create({
-				data: { ...user },
+				data: {
+					...userData,
+					password: hashedPassword,
+				},
 			});
 			return newUser;
 		} catch (error: any) {
@@ -27,22 +37,22 @@ export namespace UserService {
 	};
 
 	export const login = async (userData: Pick<User, "email" | "password">) => {
-		// TODO: Hash password and check it's correctness after validating email
 		// TODO: return JWT on authentication
 		try {
 			const user = await prisma.user.findFirst({
 				where: {
 					email: userData.email,
-					password: userData.password,
-				},
-				include: {
-					instructor: true,
 				},
 			});
 			if (!user) {
 				throw new Error("Either username or password are wrong");
 			}
-			return; // Return token
+			const pepperPassword = userData.password + pepper;
+			const passwordMatch = bcrypt.compareSync(pepperPassword, user.password);
+			if (!passwordMatch) {
+				throw new Error("Either username or password are wrong");
+			}
+			return passwordMatch; // Return token
 		} catch (error: any) {
 			throw new Error(error);
 		}
