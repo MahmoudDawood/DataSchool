@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "../services/user.service";
 
+const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+
 export namespace UserController {
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
 		// TODO: Check express validators errors to return them
@@ -11,7 +13,7 @@ export namespace UserController {
 					new Error("Please provide first, last name, gender, phone, email, password")
 				);
 			}
-			const token = await UserService.create({
+			const result = await UserService.create({
 				firstName,
 				lastName,
 				gender,
@@ -19,11 +21,16 @@ export namespace UserController {
 				email,
 				password,
 			});
-
-			return res.status(201).json({
-				message: "User created successfully",
-				data: token,
-			});
+			if (result) {
+				res.cookie("jwt", result.token, {
+					httpOnly: true,
+					maxAge: COOKIE_MAX_AGE as number,
+				});
+				return res.status(201).json({
+					message: "User created successfully",
+					data: result,
+				});
+			}
 		} catch (error) {
 			next(error);
 		}
@@ -33,13 +40,27 @@ export namespace UserController {
 		// TODO: Check -Split- if user is an instructor
 		try {
 			const data = req.body;
-			const token = await UserService.login(data);
+			const result = await UserService.login(data);
+
+			res.cookie("jwt", result.token, {
+				httpOnly: true,
+				maxAge: COOKIE_MAX_AGE as number,
+			});
 			return res.status(201).json({
 				message: "User Logged In successfully",
-				data: token,
+				data: result,
 			});
 		} catch (error) {
 			next(error);
+		}
+	};
+
+	export const logout = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			res.clearCookie("jwt");
+			return res.status(200).json({ message: "Logged out successfully" });
+		} catch (error: any) {
+			next(new Error(error));
 		}
 	};
 
@@ -99,16 +120,6 @@ export namespace UserController {
 				message: "User password updated successfully",
 				data: user,
 			});
-		} catch (error: any) {
-			next(new Error(error));
-		}
-	};
-
-	export const logout = async (req: Request, res: Response, next: NextFunction) => {
-		try {
-			// const id = req.params.id;
-			// TODO: Destroy current session, expire token and delete it
-			return res.status(204).json({ message: "User Logged out successfully" });
 		} catch (error: any) {
 			next(new Error(error));
 		}

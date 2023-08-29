@@ -32,7 +32,9 @@ export namespace UserService {
 				},
 			});
 			const token = jwt.sign(newUser, tokenSecret);
-			return token;
+			const id = newUser.id;
+			const email = newUser.email;
+			return { token, id, email };
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -54,7 +56,9 @@ export namespace UserService {
 				throw new Error("Either username or password are wrong");
 			}
 			const token = jwt.sign(user, tokenSecret);
-			return token;
+			const id = user.id;
+			const email = user.email;
+			return { token, id, email };
 		} catch (error: any) {
 			throw new Error(error);
 		}
