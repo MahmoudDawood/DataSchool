@@ -1,13 +1,21 @@
-import { Course, PrismaClient, Topic } from "@prisma/client";
+import { Course, PrismaClient } from "@prisma/client";
+import DOMPurify from "isomorphic-dompurify";
+import { marked } from "marked";
+
 const prisma = new PrismaClient();
 
 export namespace CourseService {
 	type CourseData = Omit<Course, "id" | "createdAt" | "updatedAt" | "rating" | "views">;
 	export const create = async (courseData: CourseData) => {
 		try {
+			// Content is received as a multiline md joined by a \\n using the regex (/\n/g, "\\n")
+			const multiLineContent = courseData.content.replace(/\\n/g, "\n");
+			const htmlContent = marked.parse(multiLineContent);
+			const cleanHTML = DOMPurify.sanitize(htmlContent);
 			const newCourse = await prisma.course.create({
 				data: {
 					...courseData,
+					content: cleanHTML,
 				},
 				include: { topics: true },
 			});
@@ -25,7 +33,7 @@ export namespace CourseService {
 				select: {
 					id: true,
 					title: true,
-					description: true,
+					about: true,
 					instructor: true,
 					duration: true,
 					price: true,
@@ -74,7 +82,7 @@ export namespace CourseService {
 				},
 				select: {
 					title: true,
-					description: true,
+					content: true,
 					instructor: true,
 					duration: true,
 					price: true,
@@ -89,6 +97,14 @@ export namespace CourseService {
 
 	export const updateById = async (id: string, dataUpdate: Partial<Course>) => {
 		try {
+			const updatedContent = dataUpdate.content;
+			if (updatedContent) {
+				const multiLineContent = updatedContent.replace(/\\n/g, "\n");
+				const htmlContent = marked.parse(multiLineContent); //
+				const cleanHTML = DOMPurify.sanitize(htmlContent);
+				dataUpdate.content = cleanHTML;
+			}
+
 			const updatedCourse = await prisma.course.update({
 				where: { id },
 				data: {

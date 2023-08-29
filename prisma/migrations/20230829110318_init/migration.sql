@@ -42,6 +42,7 @@ CREATE TABLE "Course" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "instructorId" TEXT NOT NULL,
+    "about" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "outcomes" TEXT[],
     "preview" TEXT NOT NULL,

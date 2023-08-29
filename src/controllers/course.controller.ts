@@ -5,26 +5,8 @@ export namespace CourseController {
 	// TODO:
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const {
-				title,
-				instructorId,
-				description,
-				duration,
-				preview,
-				price,
-				outcomes,
-				photo,
-			} = req.body;
-			const course = await CourseService.create({
-				title,
-				instructorId,
-				description,
-				duration,
-				preview,
-				price,
-				outcomes,
-				photo,
-			});
+			const data = req.body;
+			const course = await CourseService.create(data);
 
 			return res.status(201).json({
 				message: "Course created successfully",

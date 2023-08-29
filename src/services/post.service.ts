@@ -1,12 +1,19 @@
 import { Post, PrismaClient } from "@prisma/client";
+import DOMPurify from "isomorphic-dompurify";
+import marked from "marked";
 const prisma = new PrismaClient();
 
 export namespace PostService {
-	export const create = async (post: Omit<Post, "id" | "createdAt">) => {
+	export const create = async (postData: Omit<Post, "id" | "createdAt">) => {
 		try {
+			// Content is received as a multiline md joined by a \\n using the regex (/\n/g, "\\n")
+			const multiLineContent = postData.content.replace(/\\n/g, "\n");
+			const htmlContent = marked.parse(multiLineContent);
+			const cleanHTML = DOMPurify.sanitize(htmlContent);
 			const newPost = await prisma.post.create({
 				data: {
-					...post,
+					...postData,
+					content: cleanHTML,
 				},
 			});
 			return newPost;
@@ -69,6 +76,13 @@ export namespace PostService {
 
 	export const updateById = async (id: string, updatedData: Partial<Post>) => {
 		try {
+			const updatedContent = updatedData.content;
+			if (updatedContent) {
+				const multiLineContent = updatedContent.replace(/\\n/g, "\n");
+				const htmlContent = marked.parse(multiLineContent); //
+				const cleanHTML = DOMPurify.sanitize(htmlContent);
+				updatedData.content = cleanHTML;
+			}
 			const updatedPost = await prisma.post.update({
 				where: { id },
 				data: { ...updatedData },

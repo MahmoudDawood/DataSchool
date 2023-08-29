@@ -60,7 +60,8 @@ model Course {
   id           String       @id @default(uuid())
   title        String       @unique
   instructorId String
-  description  String
+  about        String
+  content      String
   outcomes     String[]
   preview      String
   duration     Int          @default(0)
