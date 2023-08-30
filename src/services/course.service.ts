@@ -1,6 +1,5 @@
 import { Course, PrismaClient } from "@prisma/client";
-import DOMPurify from "isomorphic-dompurify";
-import { marked } from "marked";
+import markdownToHTML from "../utils/markdownToHtml";
 
 const prisma = new PrismaClient();
 
@@ -8,10 +7,7 @@ export namespace CourseService {
 	type CourseData = Omit<Course, "id" | "createdAt" | "updatedAt" | "rating" | "views">;
 	export const create = async (courseData: CourseData) => {
 		try {
-			// Content is received as a multiline md joined by a \\n using the regex (/\n/g, "\\n")
-			const multiLineContent = courseData.content.replace(/\\n/g, "\n");
-			const htmlContent = marked.parse(multiLineContent);
-			const cleanHTML = DOMPurify.sanitize(htmlContent);
+			const cleanHTML = markdownToHTML(courseData.content);
 			const newCourse = await prisma.course.create({
 				data: {
 					...courseData,
@@ -99,9 +95,7 @@ export namespace CourseService {
 		try {
 			const updatedContent = dataUpdate.content;
 			if (updatedContent) {
-				const multiLineContent = updatedContent.replace(/\\n/g, "\n");
-				const htmlContent = marked.parse(multiLineContent); //
-				const cleanHTML = DOMPurify.sanitize(htmlContent);
+				const cleanHTML = markdownToHTML(updatedContent);
 				dataUpdate.content = cleanHTML;
 			}
 

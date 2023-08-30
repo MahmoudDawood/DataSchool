@@ -13,11 +13,10 @@ import {
 	topicRouter,
 	userRouter,
 } from "./routers";
-import { errorHandler } from "./utils/errorHandler";
+import errorHandler from "./utils/errorHandler";
 
 require("dotenv").config();
 const app: Express = express();
-
 const port = process.env.PORT ?? 3000;
 
 // TODO: Use cors

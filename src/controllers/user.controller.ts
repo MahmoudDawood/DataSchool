@@ -58,7 +58,10 @@ export namespace UserController {
 	export const logout = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			res.clearCookie("jwt");
-			return res.status(200).json({ message: "Logged out successfully" });
+			return res
+				.status(200)
+				.json({ message: "Logged out successfully" })
+				.redirect("/login");
 		} catch (error: any) {
 			next(new Error(error));
 		}

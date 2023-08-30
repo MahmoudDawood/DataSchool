@@ -1,15 +1,12 @@
 import { Post, PrismaClient } from "@prisma/client";
-import DOMPurify from "isomorphic-dompurify";
-import marked from "marked";
+import markdownToHTML from "../utils/markdownToHtml";
+
 const prisma = new PrismaClient();
 
 export namespace PostService {
 	export const create = async (postData: Omit<Post, "id" | "createdAt">) => {
 		try {
-			// Content is received as a multiline md joined by a \\n using the regex (/\n/g, "\\n")
-			const multiLineContent = postData.content.replace(/\\n/g, "\n");
-			const htmlContent = marked.parse(multiLineContent);
-			const cleanHTML = DOMPurify.sanitize(htmlContent);
+			const cleanHTML = markdownToHTML(postData.content);
 			const newPost = await prisma.post.create({
 				data: {
 					...postData,
@@ -78,9 +75,7 @@ export namespace PostService {
 		try {
 			const updatedContent = updatedData.content;
 			if (updatedContent) {
-				const multiLineContent = updatedContent.replace(/\\n/g, "\n");
-				const htmlContent = marked.parse(multiLineContent); //
-				const cleanHTML = DOMPurify.sanitize(htmlContent);
+				const cleanHTML = markdownToHTML(updatedContent);
 				updatedData.content = cleanHTML;
 			}
 			const updatedPost = await prisma.post.update({

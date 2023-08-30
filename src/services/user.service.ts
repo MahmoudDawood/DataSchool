@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 dotenv.config();
 const prisma = new PrismaClient();
-const salt = process.env.BCRYPT_SALT || "1";
+const salt = process.env.BCRYPT_SALT || 10;
 const pepper = process.env.BCRYPT_PEPPER;
 const tokenSecret = process.env.TOKEN_SECRET || "1";
 
@@ -24,7 +24,7 @@ export namespace UserService {
 				// TODO: Split email and phone validations
 			}
 			const pepperPassword = userData.password + pepper;
-			const hashedPassword = bcrypt.hashSync(pepperPassword, parseInt(salt));
+			const hashedPassword = bcrypt.hashSync(pepperPassword, salt);
 			const newUser = await prisma.user.create({
 				data: {
 					...userData,
@@ -32,9 +32,8 @@ export namespace UserService {
 				},
 			});
 			const token = jwt.sign(newUser, tokenSecret);
-			const id = newUser.id;
 			const email = newUser.email;
-			return { token, id, email };
+			return { token, email };
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -56,9 +55,8 @@ export namespace UserService {
 				throw new Error("Either username or password are wrong");
 			}
 			const token = jwt.sign(user, tokenSecret);
-			const id = user.id;
 			const email = user.email;
-			return { token, id, email };
+			return { token, email };
 		} catch (error: any) {
 			throw new Error(error);
 		}

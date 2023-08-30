@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-export const errorHandler = (
-	err: any,
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
+
+const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
 	const statusCode = err.statusCode || 500;
 	if (!err.message) {
 		err.message = "Something went wrong!";
@@ -20,3 +16,5 @@ export const errorHandler = (
 		// stack: err.stack,
 	});
 };
+
+export default errorHandler;
