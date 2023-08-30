@@ -43,7 +43,7 @@ CREATE TABLE "Course" (
     "title" TEXT NOT NULL,
     "instructorId" TEXT NOT NULL,
     "about" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
     "outcomes" TEXT[],
     "preview" TEXT NOT NULL,
     "duration" INTEGER NOT NULL DEFAULT 0,
@@ -89,6 +89,15 @@ CREATE TABLE "Lesson" (
     "sectionId" TEXT NOT NULL,
 
     CONSTRAINT "Lesson_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "CompletedLesson" (
+    "lessonId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "courseId" TEXT NOT NULL,
+
+    CONSTRAINT "CompletedLesson_pkey" PRIMARY KEY ("lessonId","userId","courseId")
 );
 
 -- CreateTable
@@ -190,6 +199,12 @@ ALTER TABLE "Section" ADD CONSTRAINT "Section_courseId_fkey" FOREIGN KEY ("cours
 
 -- AddForeignKey
 ALTER TABLE "Lesson" ADD CONSTRAINT "Lesson_sectionId_fkey" FOREIGN KEY ("sectionId") REFERENCES "Section"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CompletedLesson" ADD CONSTRAINT "CompletedLesson_lessonId_fkey" FOREIGN KEY ("lessonId") REFERENCES "Lesson"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CompletedLesson" ADD CONSTRAINT "CompletedLesson_userId_courseId_fkey" FOREIGN KEY ("userId", "courseId") REFERENCES "Enrollment"("userId", "courseId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE CASCADE;

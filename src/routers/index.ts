@@ -1,4 +1,5 @@
 export * from "./comment.router";
+export * from "./completedLesson.router";
 export * from "./course.router";
 export * from "./enrollment.router";
 export * from "./lesson.router";
