@@ -1,13 +1,8 @@
-import express, {
-	ErrorRequestHandler,
-	Express,
-	NextFunction,
-	Request,
-	Response,
-} from "express";
+import express, { Express } from "express";
 import morgan from "morgan";
 import {
 	commentRouter,
+	completedLessonRouter,
 	courseRouter,
 	enrollmentRouter,
 	lessonRouter,
@@ -33,13 +28,14 @@ app.use(morgan("dev"));
 app.use("/users", userRouter);
 app.use("/courses", courseRouter);
 app.use("/enroll", enrollmentRouter);
+app.use("/lessons", lessonRouter);
 app.use("/sections", sectionRouter);
+app.use("/complete", completedLessonRouter);
 app.use("/reviews", reviewRouter);
 app.use("/topics", topicRouter);
 app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
 app.use("/likes", likeRouter);
-app.use("/lessons", lessonRouter);
 
 app.get("/", (req, res) => {
 	res.send("Hello world");

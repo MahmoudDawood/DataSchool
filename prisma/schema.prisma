@@ -43,15 +43,16 @@ model Instructor {
 }
 
 model Enrollment {
-  userId        String
-  courseId      String
-  enrolledAt    DateTime @default(now())
-  payment       Float
-  originalPrice Float
-  progress      Int?     @default(0)
-  currentLesson Int?     @default(1)
-  user          User     @relation(fields: [userId], references: [id], onDelete: NoAction)
-  course        Course   @relation(fields: [courseId], references: [id], onDelete: NoAction)
+  userId           String
+  courseId         String
+  enrolledAt       DateTime          @default(now())
+  payment          Float
+  originalPrice    Float
+  progress         Int?              @default(0)
+  currentLesson    Int?              @default(1)
+  user             User              @relation(fields: [userId], references: [id], onDelete: NoAction)
+  course           Course            @relation(fields: [courseId], references: [id], onDelete: NoAction)
+  completedLessons CompletedLesson[]
 
   @@id([userId, courseId])
 }
@@ -96,16 +97,27 @@ model Section {
 }
 
 model Lesson {
-  id        String   @id @default(uuid())
-  title     String
-  video     String?
-  content   String?
-  files     String[]
-  links     String[]
-  duration  Int
-  order     Int
-  sectionId String
-  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  id               String            @id @default(uuid())
+  title            String
+  video            String?
+  content          String?
+  files            String[]
+  links            String[]
+  duration         Int
+  order            Int
+  sectionId        String
+  section          Section           @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  completedLessons CompletedLesson[]
+}
+
+model CompletedLesson {
+  lessonId   String
+  userId     String
+  courseId   String
+  lesson     Lesson     @relation(fields: [lessonId], references: [id])
+  enrollment Enrollment @relation(fields: [userId, courseId], references: [userId, courseId])
+
+  @@id([lessonId, userId, courseId])
 }
 
 model Review {
