@@ -19,7 +19,6 @@ export namespace UserService {
 			});
 
 			if (userExists) {
-				console.log({ userExists });
 				throw new Error("A user with this email or phone already exists");
 				// TODO: Split email and phone validations
 			}
