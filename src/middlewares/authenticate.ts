@@ -1,13 +1,21 @@
 import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 dotenv.config();
 
-export default function (req: Request, res: Response, next: NextFunction): void {
+export default function (req: Request, res: Response, next: NextFunction) {
 	try {
 		const authorizationHeader = req.headers.authorization;
 		const token = authorizationHeader?.split(" ")[1];
-		jwt.verify(token as string, process.env.TOKEN_SECRET as string);
+		if (!token) {
+			return res.status(401).send("Access Denied / Unauthorized request");
+		}
+		const payload = jwt.verify(
+			token as string,
+			process.env.TOKEN_SECRET as string
+		) as JwtPayload;
+		req.tokenId = payload.id;
+		req.role = payload.role;
 		next();
 	} catch (error: any) {
 		res.status(401);

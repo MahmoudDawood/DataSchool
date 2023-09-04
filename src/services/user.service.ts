@@ -30,9 +30,11 @@ export namespace UserService {
 					password: hashedPassword,
 				},
 			});
-			const token = jwt.sign(newUser, tokenSecret);
-			const email = newUser.email;
-			return { token, email };
+			const id = newUser.id;
+			const payload = { id, role: "user" };
+			const token = jwt.sign(payload, tokenSecret, { expiresIn: "2 days" });
+			const user = { id, firstName: newUser.firstName, role: "user" };
+			return { user, token };
 		} catch (error: any) {
 			throw new Error(error);
 		}
@@ -46,6 +48,13 @@ export namespace UserService {
 				},
 			});
 			if (!user) {
+				if (
+					userData.email == process.env.ADMIN_EMAIL &&
+					userData.password == process.env.ADMIN_PASSWORD
+				) {
+					const token = jwt.sign({ role: "admin" }, tokenSecret, { expiresIn: "2 days" });
+					return token;
+				}
 				throw new Error("Either username or password are wrong");
 			}
 			const pepperPassword = userData.password + pepper;
@@ -53,9 +62,10 @@ export namespace UserService {
 			if (!passwordMatch) {
 				throw new Error("Either username or password are wrong");
 			}
-			const token = jwt.sign(user, tokenSecret);
-			const email = user.email;
-			return { token, email };
+			const id = user.id;
+			const payload = { id, role: "user" };
+			const token = jwt.sign(payload, tokenSecret, { expiresIn: "2 days" });
+			return { user: { id, firstName: user.firstName, role: "user" }, token };
 		} catch (error: any) {
 			throw new Error(error);
 		}
