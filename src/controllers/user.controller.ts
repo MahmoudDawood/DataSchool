@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "../services/user.service";
 
-const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+const COOKIE_MAX_AGE = 2 * 24 * 60 * 60 * 1000;
 
 export namespace UserController {
 	export const create = async (req: Request, res: Response, next: NextFunction) => {
@@ -40,7 +40,7 @@ export namespace UserController {
 		// TODO: Check -Split- if user is an instructor
 		try {
 			const data = req.body;
-			const result = await UserService.login(data);
+			const result = (await UserService.login(data)) as { user: any; token: string };
 
 			res.cookie("jwt", result.token, {
 				httpOnly: true,

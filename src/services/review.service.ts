@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 export namespace ReviewService {
 	type ReviewData = Omit<Review, "createdAt">;
 	export const create = async (review: ReviewData) => {
+		// TODO: Check if user made an earlier review to this course
 		try {
 			const createdReview = await prisma.review.create({
 				data: { ...review },

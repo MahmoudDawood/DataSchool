@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { SectionController } from "../controllers/section.controller";
-
+import authenticate from "../middlewares/authenticate";
+import { isAdmin } from "../middlewares/authorize";
 const sectionRouter = Router();
 
-sectionRouter.post("/", SectionController.create); // Create a section in course
-sectionRouter.get("/", SectionController.findAll); // Get all sections (private)
-sectionRouter.get("/:id", SectionController.findById); // Get section info
-sectionRouter.put("/:id", SectionController.updateById); // Update section
-sectionRouter.delete("/:id", SectionController.deleteById); // Delete section
+sectionRouter.post("/", authenticate, isAdmin, SectionController.create); // Create a section in course
+sectionRouter.get("/", authenticate, isAdmin, SectionController.findAll); // Get all sections
+sectionRouter.get("/:id", SectionController.findById); // Get section
+sectionRouter.put("/:id", authenticate, isAdmin, SectionController.updateById); // Update section
+sectionRouter.delete("/:id", authenticate, isAdmin, SectionController.deleteById); // Delete section
 
 export { sectionRouter };

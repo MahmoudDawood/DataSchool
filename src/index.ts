@@ -1,5 +1,6 @@
 import express, { Express } from "express";
 import morgan from "morgan";
+import errorHandler from "./middlewares/errorHandler";
 import {
 	commentRouter,
 	completedLessonRouter,
@@ -13,7 +14,6 @@ import {
 	topicRouter,
 	userRouter,
 } from "./routers";
-import errorHandler from "./utils/errorHandler";
 
 require("dotenv").config();
 const app: Express = express();

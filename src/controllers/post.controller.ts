@@ -48,7 +48,11 @@ export namespace PostController {
 		}
 	};
 
-	export const searchByName = async (req: Request, res: Response, next: NextFunction) => {
+	export const searchByNameTopic = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
 		try {
 			const name = String(req.query.name);
 			const topics = decodeURIComponent(req.query.topics as string);
