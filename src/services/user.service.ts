@@ -1,13 +1,12 @@
 import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
-dotenv.config();
 const prisma = new PrismaClient();
 const salt = process.env.BCRYPT_SALT || 10;
 const pepper = process.env.BCRYPT_PEPPER;
 const tokenSecret = process.env.TOKEN_SECRET || "1";
+const expiresIn = "2 days";
 
 export namespace UserService {
 	export const create = async (userData: Omit<User, "id" | "createdAt">) => {
@@ -32,7 +31,7 @@ export namespace UserService {
 			});
 			const id = newUser.id;
 			const payload = { id, role: "user" };
-			const token = jwt.sign(payload, tokenSecret, { expiresIn: "2 days" });
+			const token = jwt.sign(payload, tokenSecret, { expiresIn });
 			const user = { id, firstName: newUser.firstName, role: "user" };
 			return { user, token };
 		} catch (error: any) {
@@ -52,7 +51,7 @@ export namespace UserService {
 					userData.email == process.env.ADMIN_EMAIL &&
 					userData.password == process.env.ADMIN_PASSWORD
 				) {
-					const token = jwt.sign({ role: "admin" }, tokenSecret, { expiresIn: "2 days" });
+					const token = jwt.sign({ role: "admin" }, tokenSecret, { expiresIn });
 					return token;
 				}
 				throw new Error("Either username or password are wrong");
@@ -64,7 +63,7 @@ export namespace UserService {
 			}
 			const id = user.id;
 			const payload = { id, role: "user" };
-			const token = jwt.sign(payload, tokenSecret, { expiresIn: "2 days" });
+			const token = jwt.sign(payload, tokenSecret, { expiresIn });
 			return { user: { id, firstName: user.firstName, role: "user" }, token };
 		} catch (error: any) {
 			throw new Error(error);

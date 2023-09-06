@@ -47,6 +47,7 @@ export namespace InstructorService {
 
 	export const findAll = async () => {
 		try {
+			console.log(process.env.TOKEN_SECRET);
 			const instructors = await prisma.instructor.findMany({
 				include: {
 					user: true,

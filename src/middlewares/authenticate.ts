@@ -1,7 +1,5 @@
-import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-dotenv.config();
 
 export default function (req: Request, res: Response, next: NextFunction) {
 	try {

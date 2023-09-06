@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # Data School PRD
 
 ## Introduction
@@ -48,166 +50,292 @@ The Data School Platform is a web-based application that allows users to create 
 
 The endpoints required for the Online Courses Platform can vary based on the specific functionality and features you want to implement. However, here are some common endpoints that you may need:
 
+## Database
+
+### Schema
+
+**User**
+
+| Attribute   | Type         | Constraints | References      |
+| ----------- | ------------ | ----------- | --------------- |
+| id          | string(id)   |             |                 |
+| fistName    | string       |             |                 |
+| lastName    | string       |             |                 |
+| gender      | Gender(enum) |             |                 |
+| phone       | string       | unique      |                 |
+| email       | string       | unique      |                 |
+| password    | string       |             |                 |
+| createdAt   | DateTime     |             |                 |
+| instructor  | string?      | optional    | Instructor(1-1) |
+| enrollments |              |             | Enrollment(1-m) |
+| reviews     |              |             | Review(1-m)     |
+| comments    |              |             | Comment(1-m)    |
+| likes       |              |             | Like(1-m)       |
+
+**Gender**
+
+| enum1 | enum2  |
+| ----- | ------ |
+| MALE  | FEMALE |
+
+**Instructor**
+
+| Attribute   | Type       | Constraints | References     |
+| ----------- | ---------- | ----------- | -------------- |
+| jobTitle    | string     |             |                |
+| about       | string     |             |                |
+| photo       | string?    | optional    |                |
+| socialMedia | Json?      | optional    |                |
+| userId      | string(id) |             | User[id] (1-1) |
+| courses     |            |             | Course(1-m)    |
+| posts       |            |             | Post(1-m)      |
+
+**Enrollment**
+
+| Attribute        | Type       | Constraints | References                |
+| ---------------- | ---------- | ----------- | ------------------------- |
+| id               | composite  |             | [userId, courseId]        |
+| userId           | string(id) |             | User[id] (m-1)            |
+| courseId         | string(id) |             | Course[id] (m-1)          |
+| payment          | float      |             |                           |
+| originalPrice    | float      |             |                           |
+| progress         | int?       | default(0)  |                           |
+| currLesson       | int ?      | default(1)  |                           |
+| enrolledAt       | DateTime   |             |                           |
+| completedLessons |            |             | CompletedLesson[id] (1-m) |
+
+**Course**
+
+| Attribute    | Type       | Constraints | References           |
+| ------------ | ---------- | ----------- | -------------------- |
+| id           | string(id) |             | primary key          |
+| title        | string     | unique      |                      |
+| instructorId | string     |             | User[id] (m-1)       |
+| about        | string     | string      |                      |
+| content      | string     |             |                      |
+| outcomes     | string[]   |             |                      |
+| preview      | string     |             |                      |
+| duration     | int        | default(0)  |                      |
+| price        | float      |             |                      |
+| photo        | string?    | optional    |                      |
+| rating       | float      | default(0)  |                      |
+| views        | int        | default(0)  |                      |
+| createdAt    | DateTime   |             |                      |
+| updatedAt    | DateTime   |             |                      |
+| topics       |            |             | Topics[id] (m-m)     |
+| enrollments  |            |             | Enrollment[id] (1-m) |
+| reviews      |            |             | Reviews[id] (1-m)    |
+| sections     |            |             | Sections[id] (1-m)   |
+
+**Topic**
+
+| Attribute | Type       | Constraints | References       |
+| --------- | ---------- | ----------- | ---------------- |
+| id        | string(id) |             | primary key      |
+| name      | string     | unique      |                  |
+| courses   |            |             | Course[id] (m-m) |
+| posts     |            |             | Post[id] (m-m)   |
+
+**Section**
+
+| Attribute | Type       | Constraints | References       |
+| --------- | ---------- | ----------- | ---------------- |
+| id        | string(id) |             | primary key      |
+| title     | string     |             |                  |
+| duration  | int        | default(0)  |                  |
+| order     | int        |             |                  |
+| courseId  |            |             | Course[id] (m-1) |
+| lessons   |            |             | Lesson[id] (1-m) |
+
+**Lesson**
+
+| Attribute        | Type       | Constraints | References                |
+| ---------------- | ---------- | ----------- | ------------------------- |
+| id               | string(id) |             | primary key               |
+| title            | string     |             |                           |
+| video            | string?    | optional    |                           |
+| content          | string?    | optional    |                           |
+| files            | string[]   |             |                           |
+| links            | string[]   |             |                           |
+| duration         | int        |             |                           |
+| order            | int        |             |                           |
+| sectionId        | string     |             | Section[id] (m-1)         |
+| completedLessons |            |             | CompletedLesson[id] (1-m) |
+
+**CompletedLesson**
+
+| Attribute  | Type      | Constraints | References                   |
+| ---------- | --------- | ----------- | ---------------------------- |
+| id         | composite | Primary Key | [lessonId, userId, courseId] |
+| lessonId   | string    |             | Lesson[id]                   |
+| userId     | string    |             | User[id]                     |
+| courseId   | string    |             | Course[id]                   |
+| enrollment |           |             | Enrollment[id]               |
+
+**Review**
+
+| Attribute | Type      | Constraints | References         |
+| --------- | --------- | ----------- | ------------------ |
+| id        | composite | Primary Key | [userId, courseId] |
+| userId    | string    |             | User[id]           |
+| courseId  | string    |             | Course[id]         |
+| comment   | string?   |             |                    |
+| rating    | float     |             |                    |
+| createdAt | DateTime  |             |                    |
+
+**Post**
+
+| Attribute | Type       | Constraints | References         |
+| --------- | ---------- | ----------- | ------------------ |
+| id        | string(id) | Primary Key |                    |
+| authorId  | string     |             | Instructor[userId] |
+| title     | string     |             |                    |
+| image     | string?    | optional    |                    |
+| content   | string     |             |                    |
+| createdAt | DateTime   |             |                    |
+| topics    |            |             | Topic[id] (m-m)    |
+| comments  |            |             | Comment[id] (1-m)  |
+
+**Comment**
+
+| Attribute | Type       | Constraints | References |
+| --------- | ---------- | ----------- | ---------- |
+| id        | string(id) | Primary Key |            |
+| userId    | string     |             | User[id]   |
+| postId    | string     |             | Post[id]   |
+| comment   | string     |             |            |
+| createdAt | DateTime   |             |            |
+
+**Like**
+| Attribute | Type | Constraints | References |
+| --------- | --------- | ----------- | ---------------- |
+| id | composite | Primary Key | [userId, postId] |
+| userId | string | | User[id] |
+| postId | string | | Post[id] |
+| createdAt | DateTime | | |
+
 ## Endpoints
 
-1. User Endpoints:
+**Start with /api**
 
-   - `POST /api/users/register`: Create a new user account.
-   - `POST /api/users/login`: Authenticate and log in a user.
-   - `GET /api/users/logout`: Log out the currently authenticated user.
-   - `GET /api/users/me`: Get the profile information of the authenticated user.
-   - `PUT /api/users/me`: Update the profile information of the authenticated user.
-   - `PUT /api/users/me/password`: Update the password of the authenticated user.
+**User:**
 
-2. Course Endpoints:
+```
+   - /users/signup             [POST]
+   - /users/instructors/signup [POST]
+   - /users/signup             [POST]
+   - /users/login              [POST]
+   - /users/logout             [POST]
+   - /users/                   [GET]
+   - /users/:id                [GET]
+   - /users/instructors        [GET]
+   - /users/instructors/:id    [GET]
+   - /users/:id                [PUT]
+   - /users/instructors/:id    [PUT]
+   - /users/password/:id       [PUT]
+   - /users/:id                [DELETE]
+```
 
-   - `GET /api/courses`: Get a list of available courses.
-   - `GET /api/courses/{courseId}`: Get detailed information about a specific course.
-   - `POST /api/courses/{courseId}/enroll`: Enroll the authenticated user in a course.
-   - `GET /api/courses/{courseId}/content`: Get the content of a specific course.
-   - `POST /api/courses/{courseId}/ratings`: Rate and provide feedback for a course.
+**Course:**
 
-3. Blog Endpoints:
+```
+   - /courses/                  [POST]
+   - /courses/topics/:id        [POST]
+   - /courses/                  [GET]
+   - /courses/search?name&topic [GET]
+   - /courses/:id               [GET]
+   - /courses/id                [PUT]
+   - /courses/topics/:id        [DELETE]
+   - /courses/:id               [DELETE]
+```
 
-   - `GET /api/blog/posts`: Get a list of all blog posts.
-   - `GET /api/blog/posts/{postId}`: Get detailed information about a specific blog post.
-   - `POST /api/blog/posts`: Create a new blog post (admin only).
-   - `PUT /api/blog/posts/{postId}`: Update a specific blog post (admin only).
-   - `DELETE /api/blog/posts/{postId}`: Delete a specific blog post (admin only).
-   - `POST /api/blog/posts/{postId}/comments`: Add a comment to a specific blog post.
-   - `PUT /api/blog/comments/{commentId}`: Update user's comment.
-   - `DELETE /api/blog/comments/{commentId}`: Delete user's comment.
+**Enrollment:**
 
-4. Payment Endpoints:
-   - `POST /api/payments/checkout`: Initiate the checkout process for a course purchase.
-   - `POST /api/payments/webhook`: Receive and process payment webhooks from the payment gateway.
+```
+   - /enroll/                  [PUT]
+   - /enroll/user/:id          [GET]
+   - /enroll/course/:id        [GET]
+   - /enroll/:userId/:courseId [DELETE]
+```
 
-## ERD
+**Section:**
 
-Entities:
+```
+   - /sections/    [POST]
+   - /sections/    [GET]
+   - /sections/:id [GET]
+   - /sections/:id [PUT]
+   - /sections/:id [DELETE]
+```
 
-1. User: Represents a registered user of the platform.
+**Lesson:**
 
-   - Attributes: UserID (Primary Key), Name, Email, Password, CreatedAt, UpdatedAt
+```
+   - /lessons/    [POST]
+   - /lessons/    [GET]
+   - /lessons/:id [GET]
+   - /lessons/:id [PUT]
+   - /lessons/:id [DELETE]
+```
 
-2. Course: Represents a course available on the platform.
+**CompletedLesson:**
 
-   - Attributes: CourseID (Primary Key), Title, Description, Instructor, Duration, Price, CreatedAt, UpdatedAt
-   - Relationships: One-to-Many with User (Instructor)
+```
+   - /complete/                  [POST]
+   - /complete/:userId/:courseId [GET]
+```
 
-3. Enrollment: Represents the enrollment of a user in a course.
+**Review:**
 
-   - Attributes: EnrollmentID (Primary Key), UserID (Foreign Key), CourseID (Foreign Key), EnrolledAt
-   - Relationships: Many-to-One with User, Many-to-One with Course
+```
+   - /reviews/                  [POST]
+   - /reviews/user/:id          [GET]
+   - /reviews/:id               [GET]
+   - /reviews/:userId/:courseId [PUT]
+   - /reviews/:userId/:courseId [DELETE]
+```
 
-4. Content: Represents the content of a course.
+**Topic:**
 
-   - Attributes: ContentID (Primary Key), CourseID (Foreign Key), Title, Type, Description, CreatedAt, UpdatedAt
-   - Relationships: Many-to-One with Course
+```
+   - /topics/    [POST]
+   - /topics/    [GET]
+   - /topics/:id [DELETE]
+```
 
-5. Rating: Represents the rating given by a user for a course.
+**Post:**
 
-   - Attributes: RatingID (Primary Key), UserID (Foreign Key), CourseID (Foreign Key), Rating, Comment, RatedAt
-   - Relationships: Many-to-One with User, Many-to-One with Course
+```
+   - /posts/                  [POST]
+   - /posts/topics/:id        [POST]
+   - /posts/                  [GET]
+   - /posts/search?name&topic [GET]
+   - /posts/:id               [GET]
+   - /posts/:id               [PUT]
+   - /posts/topics/:id        [DELETE]
+   - /posts/:id               [DELETE]
+```
 
-6. BlogPost: Represents a blog post created by the admin.
+**Comment:**
 
-   - Attributes: BlogPostID (Primary Key), Title, Content, Author, CreatedAt, UpdatedAt
+```
+         - /comments/         [POST]
+         - /comments/user/:id [GET]
+         - /comments/post/:id [GET]
+         - /comments/:id      [PUT]
+         - /comments/:id      [DELETE]
+```
 
-7. Comment: Represents a comment made by a user on a blog post.
-   - Attributes: CommentID (Primary Key), BlogPostID (Foreign Key), UserID (Foreign Key), Comment, CreatedAt, UpdatedAt
-   - Relationships: Many-to-One with BlogPost, Many-to-One with User
+**Like:**
+
+```
+   - /likes/                     [POST]
+   - /likes/user/:userId/:postId [GET]
+   - /likes/user/:id             [GET]
+   - /likes/post/:id             [GET]
+   - /likes/:userId/:postId      [GET]
+```
 
 ## Conclusion
 
 The Online Courses Platform aims to provide users with a convenient and engaging online learning experience. By implementing the features and requirements outlined in this PRD, we can create a robust and user-friendly platform that enables users to access and study a wide range of courses, interact with blog posts, and enhance their skills and knowledge.
-
-## Tables
-
-### Users
-
-| Attribute | Type   | References     | edits                                    |
-| --------- | ------ | -------------- | ---------------------------------------- |
-| id        | string | primary key    |
-| fistName  | string |                |
-| lastName  | string |                |
-| email     | string | unique         |
-| password  | string |                |
-| role      | string | default='user' | Make it an enum of either user of author |
-| createdAt | int    |                |
-
-### Courses
-
-| Attribute   | Type   | References                       | edits                           |
-| ----------- | ------ | -------------------------------- | ------------------------------- |
-| id          | string | primary key                      |
-| title       | string |                                  |
-| description | string |                                  |
-| duration    | int    |                                  |
-| price       | int    |                                  |
-| category    | string |                                  | Course has only on category?    |
-| authorId    | string | foreign key references users(id) |
-| lessons     | json   |                                  |
-| quizzes     | json   |                                  | Could attach to lesson directly |
-| preview     | string |                                  |
-| createdAt   | number |                                  |
-
-### Enrollment
-
-| Attribute  | Type   | References                         |
-| ---------- | ------ | ---------------------------------- |
-| id         | string | primary key                        |
-| userId     | string | foreign key references users(id)   |
-| courseId   | string | foreign key references courses(id) |
-| enrolledAt | int    |                                    |
-
-### Lessons
-
-| Attribute | Type   | References                         | edits                |
-| --------- | ------ | ---------------------------------- | -------------------- |
-| id        | string | primary key                        |
-| courseId  | string | foreign key references courses(id) |
-| title     | string |                                    |
-| content   | text   |                                    |
-| quiz      | json   |                                    |
-| url       | string |                                    | Add images and links |
-
-### Reviews
-
-| Attribute | Type     | References                         | edits     |
-| --------- | -------- | ---------------------------------- | --------- |
-| id        | string   | primary key                        | Composite |
-| courseId  | string   | foreign key references courses(id) |
-| userId    | string   | foreign key references users(id)   |
-| comment   | text     |                                    |
-| rating    | float    |                                    | enums     |
-| createdAt | datetime |                                    |
-
-### Posts
-
-| Attribute | Type     | References                       |
-| --------- | -------- | -------------------------------- |
-| id        | int      | primary key                      |
-| title     | string   |                                  |
-| content   | text     |                                  |
-| authorId  | int      | foreign key references users(id) |
-| createdAt | datetime |                                  |
-
-### Comments
-
-| Attribute | Type     | References                            | edits                  |
-| --------- | -------- | ------------------------------------- | ---------------------- |
-| id        | string   | primary key                           |
-| postId    | string   | foreign key references blog_posts(id) |
-| userId    | string   | foreign key references users(id)      |
-| content   | text     |                                       |
-| createdAt | datetime |                                       | Include media (images) |
-
-### Likes
-
-| Attribute | Type      | References                | edits            |
-| --------- | --------- | ------------------------- | ---------------- |
-| id        | int       | primary key               | Can be composite |
-| postId    | int       | foreign key to posts (id) |
-| userId    | int       | foreign key to users (id) |
-| createdAt | timestamp |                           | Ignore           |

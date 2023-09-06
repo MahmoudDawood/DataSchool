@@ -15,10 +15,10 @@ userRouter.post(
 	InstructorController.create
 ); // Create new Instructor
 userRouter.post("/login", UserController.login); // Login
-userRouter.post("/logout", authenticate, UserController.logout); // Logout
+userRouter.post("/logout/:id", authenticate, UserController.logout); // Logout
 userRouter.get("/", authenticate, isAdmin, UserController.findAll); // Get all users (Private)
-userRouter.get("/instructors", InstructorController.findAll); // Get all instructors
 userRouter.get("/:id", authenticate, authorize, UserController.findById); // Get user by Id
+userRouter.get("/instructors", InstructorController.findAll); // Get all instructors
 userRouter.get("/instructors/:id", InstructorController.findById); // Get Instructor by Id
 userRouter.put("/:id", authenticate, authorize, UserController.updateById); // Update user profile
 userRouter.put(
