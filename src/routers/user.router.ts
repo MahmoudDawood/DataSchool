@@ -16,18 +16,18 @@ userRouter.post(
 ); // Create new Instructor
 userRouter.post("/login", UserController.login); // Login
 userRouter.post("/logout/:id", authenticate, UserController.logout); // Logout
-userRouter.get("/", authenticate, isAdmin, UserController.findAll); // Get all users (Private)
-userRouter.get("/:id", authenticate, authorize, UserController.findById); // Get user by Id
-userRouter.get("/instructors", InstructorController.findAll); // Get all instructors
 userRouter.get("/instructors/:id", InstructorController.findById); // Get Instructor by Id
-userRouter.put("/:id", authenticate, authorize, UserController.updateById); // Update user profile
+userRouter.get("/instructors", InstructorController.findAll); // Get all instructors
+userRouter.get("/:id", authenticate, authorize, UserController.findById); // Get user by Id
+userRouter.put("/password/:id", authenticate, authorize, UserController.updatePassword); // Reset Password
+userRouter.get("/", authenticate, isAdmin, UserController.findAll); // Get all users (Private)
 userRouter.put(
 	"/instructors/:id",
 	authenticate,
 	authorize,
 	InstructorController.updatedById
 ); // Update Instructor profile
-userRouter.put("/password/:id", authenticate, authorize, UserController.updatePassword); // Reset Password
+userRouter.put("/:id", authenticate, authorize, UserController.updateById); // Update user profile
 userRouter.delete("/:id", authenticate, authorize, UserController.deleteById); // Delete User (Private)
 
 export { userRouter };
